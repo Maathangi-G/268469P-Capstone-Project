@@ -1,0 +1,12 @@
+[browser]
+# Do not send usage statistics from this local prototype.
+gatherUsageStats = false
+
+[server]
+# Local prototype: listen on this machine only, not the local network.
+address = "localhost"
+# Demonstration CSVs are small; keep uploads bounded (MB).
+maxUploadSize = 10
+# Do not auto-open a browser or run first-run interactive prompts;
+# open the printed http://localhost:8501 URL manually.
+headless = true

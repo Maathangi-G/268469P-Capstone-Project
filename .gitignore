@@ -1,0 +1,66 @@
+# ---------------------------------------------------------------
+# PRIVACY: company data must never be committed to this repository.
+# .gitignore does NOT protect files that are already tracked; always
+# review `git status` and `git diff --cached` before committing.
+# ---------------------------------------------------------------
+
+# Data: only the synthetic demonstration sample is publishable.
+data/*
+!data/sample/
+data/sample/*
+!data/sample/demo_operations.csv
+!data/sample/README.md
+
+# Private package, raw workbooks and archives (anywhere in the tree)
+*PRIVATE*
+*private*
+AgriFlight_Dataset_v0_1/
+*.zip
+*.7z
+*.rar
+*.xlsx
+*.xlsm
+*.xls
+*.parquet
+*.feather
+*.sqlite
+*.db
+
+# Generated reports, exports and model artifacts
+reports/
+outputs/
+exports/
+models/
+mlruns/
+*.pkl
+*.pickle
+*.joblib
+*.onnx
+*.h5
+
+# Secrets and local configuration
+.env
+.env.*
+*.pem
+*.key
+.streamlit/secrets.toml
+
+# Python environments, caches and build output
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

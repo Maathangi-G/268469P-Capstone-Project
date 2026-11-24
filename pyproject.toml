@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agriflight"
+version = "0.1.0"
+description = "AgriFlight AI - data readiness foundation for agricultural drone-operation planning (capstone prototype)."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "G. Maathangi (268469P)" }]
+dependencies = [
+    "pandas>=2.2",
+]
+
+[project.optional-dependencies]
+app = ["streamlit>=1.40"]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
