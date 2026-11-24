@@ -36,6 +36,7 @@ pytest 9.2.0.
 | Bundled demo validation | Exactly the 7 documented issues detected, all severity `error` |
 | Headless app test (`streamlit.testing.AppTest`) | Script runs without exception; demo notice, "Validation failed: 7 error(s)", four tabs and the 27-row metric are rendered; upload mode with no file renders without error |
 | Server startup (`streamlit run app/app.py`) | Server started; `/_stcore/health` returned `ok` on 127.0.0.1; not reachable on the LAN address |
+| Fresh clone following README commands | Install succeeded, 45 passed, server started; working tree stayed clean. A first attempt in a very long folder path failed during `pip install` (Windows path-length limit, Streamlit package files) - see README Windows note |
 
 ## Not yet verified
 

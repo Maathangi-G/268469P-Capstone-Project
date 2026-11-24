@@ -45,6 +45,11 @@ python -m pip install -e ".[app,dev]"
 The editable install makes the `agriflight` package (in `src/`) importable from
 the app, the tests and notebooks.
 
+**Windows note:** Streamlit's package contains deeply nested files. If
+`pip install` fails with `OSError ... No such file or directory` and a hint
+about long paths, clone the repository to a shorter folder (for example
+`C:\dev\agriflight`) or enable Windows long-path support, then reinstall.
+
 ## Run the dashboard
 
 ```bash
