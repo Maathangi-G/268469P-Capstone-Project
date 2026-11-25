@@ -63,6 +63,32 @@ pytest 9.2.0.
 - Approval of operating-unit, farm/division and alias mappings.
 - Client onboarding/service start dates.
 
+## Milestone 2 - read-only operational dataset integration (25 November 2026, awaiting student review)
+
+Implemented (uncommitted at the time of writing):
+- Explicit data modes: synthetic (default) and private, with the private package located through
+  `AGRIFLIGHT_DATA_DIR`. There is no fallback to synthetic data.
+- Read-only loading of 18 package tables, with strict date/boolean/number parsing and recognition of
+  header-only templates.
+- Application checks run on load: required columns, primary keys, foreign keys, hierarchy, allowed
+  values, and snapshot/manifest reconciliation. These are displayed separately from the package's
+  supplied findings.
+- Four descriptive views: divisions and readiness; source observations by layer; budget and vehicle
+  evidence (with counting safeguards); data quality and readiness.
+
+Actual test outcomes (Windows 11, Python 3.14.7, pandas 3.1.1, Streamlit 1.67.0):
+
+| Check | Result |
+| --- | --- |
+| Test suite before changes | 45 passed |
+| Test suite after changes | 94 passed, 0 failed (one test assertion was corrected during development; see AI log) |
+| Headless app run against the real private package (not a committed test) | All five private-mode tabs rendered without exception; the layer, date-field, farm and single-division selectors ran without exception; switching back to synthetic mode cleared the private cache |
+| Server startup with `AGRIFLIGHT_DATA_DIR` set | `/_stcore/health` returned `ok` on 127.0.0.1; not reachable on the LAN address |
+| Private package integrity after the runs | All FILE_MANIFEST.json hashes still match; no files added |
+
+Manual browser verification: reported as completed by the student on 25 November 2026 (not observed by
+the AI assistant). Student review of the design decisions and approval to commit are still pending.
+
 ## Next implementation milestone (planned)
 
 1. Local-only adapter from the private staging tables to a reviewed schema,

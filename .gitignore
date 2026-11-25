@@ -12,9 +12,16 @@ data/sample/*
 !data/sample/README.md
 
 # Private package, raw workbooks and archives (anywhere in the tree)
+# NOTE: these patterns also match tracked-looking names, so new modules and
+# tests must not contain "private" in their path (use "operational").
 *PRIVATE*
 *private*
 AgriFlight_Dataset_v0_1/
+AgriFlight_Integrated_*/
+Dataset/
+*_RESTRICTED*/
+*RESTRICTED*
+identity_key.json
 *.zip
 *.7z
 *.rar

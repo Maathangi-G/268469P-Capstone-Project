@@ -3,11 +3,16 @@
 Capstone project (Master's in Data Science and AI, G. Maathangi, 268469P):
 **Agri-Flight AI - decision support for agricultural drone-operation planning.**
 
-> **Current scope: foundation milestone (v0.1.0).** This repository contains a
-> documented demonstration data schema, reusable loading and data-quality
-> validation modules, a local Streamlit dashboard and automated tests.
-> It does **not** yet contain a trained model, a scheduler, route optimisation,
-> or any analysis of real company records.
+> **Current scope: v0.2.0 (milestone 2 awaiting review).** A local Streamlit
+> dashboard with two explicit data modes:
+> - **Synthetic demonstration** (default): the public demo schema, loader,
+>   validator and summaries.
+> - **Private operational dataset**: read-only inspection, validation and
+>   descriptive views of a private integrated dataset package that is kept
+>   **outside** this repository and located through `AGRIFLIGHT_DATA_DIR`.
+>
+> It does **not** contain a trained model, a scheduler, route optimisation,
+> completed-service records, due dates or any real data.
 
 ## Privacy warning
 
@@ -60,6 +65,23 @@ Run it from the repository root, then open <http://localhost:8501> (or
 <http://127.0.0.1:8501>) in a browser. The app runs headless and bound to this
 machine only (see `.streamlit/config.toml`); stop it with `Ctrl+C`.
 
+## Private operational dataset mode (local only)
+
+The private package must stay outside the repository. Point the environment
+variable at the package **root** for the current terminal session, then start
+the app as usual:
+
+```powershell
+$env:AGRIFLIGHT_DATA_DIR = (Resolve-Path "..\Dataset\AgriFlight_Integrated_v0_2").Path
+streamlit run app/app.py
+```
+
+The app still opens in synthetic mode. Choose **Data mode -> Private
+operational dataset** in the sidebar. If the variable is missing or wrong, the
+app shows an error rather than substitute data. Do not put the path in a
+committed file. See [docs/operational_dataset.md](docs/operational_dataset.md)
+for supported tables, join rules and budget safeguards.
+
 ## Run the tests
 
 ```bash
@@ -88,7 +110,8 @@ python -m pytest
 | Data-quality validator (structured issue table) | Implemented, tested |
 | Summary service (counts, date ranges, blanks) | Implemented, tested |
 | Streamlit dashboard (4 views, in-memory upload) | Implemented; headless smoke-tested |
-| Adapter from private company workbooks | Planned - needs approved mappings and rules |
+| Private-mode read-only integration (18 tables, 4 views) | Implemented; tested with fictional fixtures; awaiting student review |
+| Further operational tables (areas, plans, trials, daily evidence) | Planned |
 | Completed-service event ledger, cadence (30 +/- 5 days) evaluation | Planned - business rules unconfirmed |
 | Coverage prediction (baseline + ML), scheduling, routing, cost & scenario analysis | Planned (see proposal) |
 
@@ -100,6 +123,8 @@ src/agriflight/data/schema.py      Demonstration schema definition
 src/agriflight/data/loader.py      CSV loading
 src/agriflight/data/validation.py  Data-quality rules -> issue table
 src/agriflight/services/           Summaries and project-status content
+src/agriflight/operational/        Private-package contract, loader, checks, summaries
+app/operational_views.py           Private-mode views (presentation only)
 data/sample/                       Synthetic demonstration data only
 tests/                             pytest suite (incl. headless app smoke test)
 docs/                              Architecture, data contract, checkpoint notes

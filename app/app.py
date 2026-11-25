@@ -12,12 +12,20 @@ Run from the repository root:
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import pandas as pd
 import streamlit as st
 
-from agriflight import __version__
+APP_DIR = Path(__file__).resolve().parent
+if str(APP_DIR) not in sys.path:  # allow importing sibling view modules
+    sys.path.insert(0, str(APP_DIR))
+
+import operational_views  # noqa: E402
+
+from agriflight import __version__  # noqa: E402
+from agriflight.operational import session as operational_session  # noqa: E402
 from agriflight.data.loader import DataLoadError, load_operations_csv
 from agriflight.data.schema import ALLOWED_RECORD_TYPES, EXPECTED_COLUMNS, SYNTHETIC_ORIGIN
 from agriflight.data.validation import ISSUE_CODES, ValidationReport, validate_operations
@@ -26,6 +34,8 @@ from agriflight.services.data_summary import missing_value_summary, summarize_da
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEMO_PATH = REPO_ROOT / "data" / "sample" / "demo_operations.csv"
+MODE_SYNTHETIC = "Synthetic demonstration (default)"
+MODE_PRIVATE = "Private operational dataset"
 DEMO_LABEL = "Bundled synthetic demo"
 UPLOAD_LABEL = "Upload a CSV (demonstration schema)"
 BLANK = "(blank)"
@@ -201,7 +211,9 @@ def _status() -> None:
     policy = status.CADENCE_POLICY
     st.markdown("**Recurring-service cadence policy**")
     st.info(
-        f"Target: {policy['target_interval_days']} days, tolerance +/-{policy['tolerance_days']} days. "
+        f"Target interval: {policy['target_interval_days']} days. "
+        f"Operational tolerance: +/-{policy['operational_tolerance_days']} days. "
+        f"Proposal tolerance: +/-{policy['proposal_tolerance_days']} days. "
         f"{policy['status']}\n\n{policy['note']}"
     )
 
@@ -218,6 +230,18 @@ def _status() -> None:
 def main() -> None:
     st.title("AgriFlight AI - Data Readiness Dashboard")
     st.caption(f"Capstone prototype v{__version__} - local use only")
+
+    mode = st.sidebar.selectbox("Data mode", [MODE_SYNTHETIC, MODE_PRIVATE], index=0)
+    if mode == MODE_PRIVATE:
+        loaded, error = operational_views.load_for_session()
+        if error:
+            operational_session.clear(st.session_state)
+            operational_views.render_load_error(error)
+            return
+        operational_views.render(loaded, _status)
+        return
+    # Synthetic mode: drop any private data held in this session.
+    operational_session.clear(st.session_state)
 
     frame, source, load_error = _load_selected()
     report = validate_operations(frame) if frame is not None else None

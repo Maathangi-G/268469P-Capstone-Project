@@ -18,6 +18,23 @@ AgriFlight AI capstone (G. Maathangi, 268469P). Public GitHub repository.
 - `.gitignore` does not protect already-tracked files: check `git status`,
   `git ls-files` and `git diff --cached` before every commit. Stage explicit paths.
 
+## Private operational dataset (milestone 2)
+- Read it in place via `AGRIFLIGHT_DATA_DIR`; never copy, move or edit it, and
+  never hardcode a local path in committed files.
+- Synthetic mode stays the default; private mode must never fall back to
+  synthetic data silently.
+- Use only the supplied anonymous labels and IDs; never split opaque IDs; do
+  not load the restricted identity/location package.
+- Tests use fictional fixtures (`tests/operational_fixtures.py`), never real rows.
+- Budget: one cost per fuel trip, no allocation to linked farms, rollups never
+  added to detail, actual-recorded kept separate, missing never zero.
+- Do not name tracked files with "private" (the `.gitignore` would hide them).
+
+## Work in reviewed increments
+- Explain changes and wait for the student's explicit approval before any
+  commit or push. Record AI work and student actions separately in
+  `docs/ai_assistance_log.md`; never record student review unless stated.
+
 ## Test before committing
 - `python -m pytest` must pass before any commit.
 - Add or update tests with every behaviour change.

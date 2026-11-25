@@ -1,6 +1,41 @@
-# Architecture (foundation milestone v0.1.0)
+# Architecture (v0.2.0)
 
-## Components
+The application has two explicit data modes that share one interface shell:
+
+- **Synthetic demonstration (default):** the v0.1.0 components below, on the
+  public nine-column demo CSV.
+- **Private operational dataset:** read-only views over the private
+  integrated package, located at run time through `AGRIFLIGHT_DATA_DIR`.
+  See [operational_dataset.md](operational_dataset.md) for tables, join rules
+  and budget safeguards.
+
+```mermaid
+flowchart LR
+    M{Data mode<br/>sidebar} -->|default| SYN[Synthetic pipeline<br/>agriflight.data + services]
+    M -->|explicit| ENV[AGRIFLIGHT_DATA_DIR<br/>package root]
+    ENV --> L[operational.loader<br/>raw text + typed copies]
+    L --> V[operational.validation<br/>app findings]
+    L --> S[operational.summaries<br/>descriptive tables]
+    L --> PF[package findings<br/>data_quality_issues, validation_results]
+    V --> UI[app/operational_views.py]
+    S --> UI
+    PF --> UI
+    SYN --> UI0[app/app.py synthetic views]
+    C[operational.session<br/>in-memory cache] -.-> L
+```
+
+Private-mode components:
+
+| Component | Location | Responsibility |
+| --- | --- | --- |
+| Contract | `src/agriflight/operational/contract.py` | Columns, types, keys, foreign keys and allowed values the app depends on. |
+| Loader | `src/agriflight/operational/loader.py` | Locates and checks the package; reads CSVs read-only; strict parsing; template recognition. |
+| Validation | `src/agriflight/operational/validation.py` | Application findings, kept separate from the package's supplied findings. |
+| Summaries | `src/agriflight/operational/summaries.py` | Descriptive tables with no-inflation and no-allocation counting safeguards. |
+| Session cache | `src/agriflight/operational/session.py` | Per-session, in-memory only. Reloads when files change; cleared on return to synthetic mode. |
+| Views | `app/operational_views.py` | Rendering and labelling only. |
+
+## Synthetic-mode components (v0.1.0, unchanged)
 
 | Component | Location | Responsibility |
 | --- | --- | --- |
@@ -53,9 +88,9 @@ mutates it.
 
 | Extension | Notes |
 | --- | --- |
-| `agriflight.adapters` - private workbook adapter | Maps the private staging tables onto reviewed schemas; run locally only; requires approved mappings and source precedence. |
+| Further operational tables | Area evidence, planned schedules, trials and daily-work evidence are not yet shown (read-only integration exists for 18 tables). |
 | `agriflight.ledger` - completed-service event ledger | Needs the completion rule (multi-day captures), service episodes and onboarding dates. |
-| `agriflight.cadence` - cadence evaluation | 30-day target, +/-5-day tolerance, once the anchor and eligible periods are confirmed. |
+| `agriflight.cadence` - cadence evaluation | 30-day target; operational +/-5 vs proposal +/-3 kept distinct; only once the anchor and eligible periods are confirmed. |
 | `agriflight.models` - coverage prediction | Baseline first, then ML (proposal 3.2), chronological splits. |
 | `agriflight.scheduling` / routing | OR-Tools based scheduling and routing (proposal 3.3). |
 | API layer | Thin Python API over these services (proposal 3.5). |

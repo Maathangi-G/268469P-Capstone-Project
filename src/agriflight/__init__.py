@@ -1,8 +1,10 @@
 """AgriFlight AI - data readiness foundation.
 
-This package currently provides data loading, data-quality validation and
-summary services for the documented *synthetic demonstration* schema. It does
-not contain a trained model, a scheduler, or any real company data.
+Provides loading, validation and summary services for the public synthetic
+demonstration schema (``agriflight.data``) and read-only integration of the
+private operational dataset package located at run time
+(``agriflight.operational``). It contains no trained model, no scheduler and
+no company data.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

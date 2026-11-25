@@ -6,49 +6,55 @@ Nothing here is a measured result.
 
 from __future__ import annotations
 
-MILESTONE = "Foundation milestone - Data Readiness Dashboard (v0.1.0)"
+MILESTONE = "Milestone 2 - read-only operational dataset integration (v0.2.0, awaiting student review)"
 
 CADENCE_POLICY = {
     "target_interval_days": 30,
-    "tolerance_days": 5,
-    "status": "Stated business policy. NOT yet applied to any real client records.",
+    "operational_tolerance_days": 5,
+    "proposal_tolerance_days": 3,
+    "status": "Recorded rules only. NOT applied to any real record; no due dates or late-visit labels are calculated.",
     "note": (
-        "The submitted proposal referred to approximately +/-3 days; the current "
-        "stated business guidance is +/-5 days. Which service periods it applies to, "
-        "the cadence anchor date and how multi-day captures count are unconfirmed."
+        "Operational instruction (student): 30 days +/-5. Submitted proposal (p.1 and p.2 section 3.3): "
+        "about 30 days after the previous completed flight, approximately +/-3 days. These are kept "
+        "separate and not reconciled. Which service periods apply, the cadence anchor and how multi-day "
+        "captures count as a completed service are unconfirmed."
     ),
 }
 
 IMPLEMENTED = [
     "Synthetic demonstration dataset (data/sample/demo_operations.csv) with documented intentional quality issues.",
-    "CSV loader that reads every value as text, preserves IDs and blanks, and records source row numbers.",
-    "Data-quality validator producing a structured issue table (row, field, code, severity, explanation).",
-    "Summary service: record counts by type, distinct units/clients, valid date ranges, blank-value summary.",
-    "Local Streamlit dashboard: Overview, Data Explorer (filters + in-memory CSV upload), Data Quality, Project Status.",
-    "Automated pytest suite for loader, validator and summary service.",
+    "CSV loader, validator and summaries for the synthetic demonstration schema.",
+    "Explicit data modes: synthetic (default) and private operational dataset via AGRIFLIGHT_DATA_DIR.",
+    "Read-only loader for 18 integrated-package tables: text-preserving, strict date/boolean/number parsing.",
+    "Application checks: required columns, primary keys, foreign keys, hierarchy, snapshot reconciliation.",
+    "Descriptive views: divisions/readiness, source observations by layer, budget and vehicle evidence, data quality.",
+    "Budget safeguards: one row per fuel trip, no cost allocation to linked farms, rollups kept separate.",
+    "Automated tests with fictional relational fixtures (no real rows).",
 ]
 
 PENDING = [
-    "Reviewed adapter from the private company workbooks to this schema (not started; requires approved mappings).",
-    "Deduplicated completed-service event ledger.",
-    "Cadence-window evaluation (30 days +/-5) on real records.",
+    "Approved completion rule and completed-service ledger (input contract empty).",
+    "Measured daily hectares for coverage modelling (input contract empty).",
+    "Cadence-window evaluation on approved service records.",
     "Daily coverage prediction baseline and ML models (proposal section 3.2).",
     "Cadence-aware scheduling, routing and resource allocation (proposal section 3.3).",
     "Weather-informed replanning, scenario and cost analysis (proposal sections 3.4-3.6).",
 ]
 
 OPEN_DECISIONS = [
-    ("Service periods", "Which client service periods/episodes the 30-day recurring target applies to."),
-    ("Cadence anchor", "Whether the interval runs from the last completed service, the planned date, or another anchor."),
-    ("Completion rule", "How multi-day captures and partial coverage count as one completed service."),
-    ("Source precedence", "Which source wins when the monthly, archive and cycle trackers overlap or disagree."),
-    ("Mappings", "Approval of operating-unit, farm/division and alias mappings (no fuzzy match is auto-approved)."),
-    ("Onboarding dates", "Client onboarding/service start dates, so short histories are not read as missed visits."),
+    ("Completion rule", "How multi-day captures and partial coverage count as one completed service (currently unknown)."),
+    ("Cadence tolerance", "Operational +/-5 days vs proposal +/-3 days - which applies for evaluation."),
+    ("Cadence anchor", "Proposal: previous completed service; no verified completion dates exist yet."),
+    ("Service periods", "Which divisions/periods are recurring service; onboarding dates are unknown."),
+    ("Source precedence", "How overlapping main_monthly, older_archive and annual_cycles records are reconciled."),
+    ("Mappings", "Approval of unresolved operation-unit to division links and route-entity candidates."),
+    ("Resources and locations", "Pilot availability, physical vehicles, base location and verified access points."),
 ]
 
 NOT_CLAIMED = [
     "No model has been trained; no accuracy, error or prediction results exist.",
-    "No overdue, late or cancellation labels have been calculated for real farms.",
+    "No completed services, due dates, overdue, late or cancellation labels have been derived.",
     "No scheduling improvement, travel saving or cost saving is claimed.",
-    "Capture observations are not treated as reconciled completed services.",
+    "Source observations are not treated as completed flights or reconciled services.",
+    "Budget rows are historical estimates, not actual spend or a forecast budget.",
 ]
