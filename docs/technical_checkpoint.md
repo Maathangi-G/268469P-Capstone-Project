@@ -113,6 +113,24 @@ Browser verification of the new tab has not been performed by the student or rec
 The Data Science component is **not** complete. Coverage prediction, its evaluation and the scheduling
 comparison remain outstanding.
 
+## Milestone 4 - rule-based scheduling baseline (27 November 2026, awaiting student review)
+
+Details: [scheduling_baseline.md](scheduling_baseline.md).
+
+| Kind | Status |
+| --- | --- |
+| Implemented | Scenario input contracts and validator; deterministic greedy day/bundle rule; cost estimation; independent checker; `scripts/run_schedule.py`; synthetic-mode tab *Scheduling baseline*; fictional demo scenario and its generator. |
+| Executed on real records | Nothing. No approved real planning scenario exists, and the private dataset was not used. |
+| Tested with fictional scenarios | All rule, constraint, cost and checker behaviour. |
+| Not claimed | Optimisation, operational validation, ML accuracy, savings, dispatch readiness. No company division is made scheduler-ready. |
+
+Actual automated results (Windows 11, Python 3.14.7): tests before the milestone **131 passed**; after it,
+**171 passed**, and **181 passed** after a focused review that added distinct date-window columns and
+boundary tests. One test expectation contained an arithmetic error (an expected cost total) and was
+corrected; the code's value was right. Fictional demo: 7 of 11 jobs scheduled, 4 not scheduled with
+structured reasons, all independent checks passed. Cost coverage is incomplete by design: one rate is
+unknown. Browser verification of the new tab has not been performed or recorded.
+
 ## Next implementation milestone (planned)
 
 1. Local-only adapter from the private staging tables to a reviewed schema,

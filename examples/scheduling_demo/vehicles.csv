@@ -1,0 +1,4 @@
+vehicle_id,vehicle_type,input_status,provenance
+VEH_4WD_1,4wd_pickup,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+VEH_CAR_1,car,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+VEH_CAR_2,car,assumption,fictional demo (examples/scheduling_demo/build_demo.py)

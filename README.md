@@ -3,7 +3,7 @@
 Capstone project (Master's in Data Science and AI, G. Maathangi, 268469P):
 **Agri-Flight AI - decision support for agricultural drone-operation planning.**
 
-> **Current scope: v0.3.0 (milestone 3 - EDA and coverage readiness - awaiting review).** A local Streamlit
+> **Current scope: v0.4.0 (milestone 4 - rule-based scheduling baseline - awaiting review).** A local Streamlit
 > dashboard with two explicit data modes:
 > - **Synthetic demonstration** (default): the public demo schema, loader,
 >   validator and summaries.
@@ -93,6 +93,18 @@ The results are written to `..\Analysis_Private\eda_v0_1`, outside the repositor
 copy them into this repository. Methods and limitations are in
 [docs/eda_methodology.md](docs/eda_methodology.md).
 
+## Rule-based scheduling baseline (fictional demo)
+
+```powershell
+python scripts/run_schedule.py
+```
+
+This runs a deterministic rule-based scheduler on the entirely fictional
+scenario in `examples/scheduling_demo/`. The same result appears in the app's
+synthetic mode under **Scheduling baseline**. The outputs are draft planning
+results with estimated costs: not dispatch authorisation, not optimisation, and
+not operationally validated. See [docs/scheduling_baseline.md](docs/scheduling_baseline.md).
+
 ## Run the tests
 
 ```bash
@@ -125,6 +137,8 @@ python -m pytest
 | EDA, coverage-target feasibility, feature-availability review | Implemented; run on private data (results private); awaiting student review |
 | Historical-mean baseline | Implemented and tested; not fitted or evaluated on operational targets |
 | Coverage prediction models (ML) | Blocked: no verified daily-hectare targets in the inspected package |
+| Rule-based scheduling baseline (draft itineraries, estimated costs, independent checker) | Implemented; tested on fictional scenarios only; awaiting student review |
+| OR-Tools optimisation and comparison | Planned |
 | Completed-service event ledger, cadence (30 +/- 5 days) evaluation | Planned - business rules unconfirmed |
 | Coverage prediction (baseline + ML), scheduling, routing, cost & scenario analysis | Planned (see proposal) |
 
@@ -140,6 +154,9 @@ src/agriflight/operational/        Private-package contract, loader, checks, sum
 app/operational_views.py           Private-mode views (presentation only)
 src/agriflight/baselines/          Guarded historical-mean baseline
 scripts/run_eda.py                 Reproducible private EDA run
+src/agriflight/scheduling/         Rule-based scheduling baseline, costs, checker
+examples/scheduling_demo/          Fictional scheduling scenario (+ generator)
+scripts/run_schedule.py            Scheduling baseline run
 data/sample/                       Synthetic demonstration data only
 tests/                             pytest suite (incl. headless app smoke test)
 docs/                              Architecture, data contract, checkpoint notes

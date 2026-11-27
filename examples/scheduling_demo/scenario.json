@@ -1,0 +1,47 @@
+{
+  "scenario_id": "DEMO_SCHEDULING_V1",
+  "data_origin": "synthetic_demo",
+  "timezone": "Asia/Colombo",
+  "horizon_start": "2030-03-04",
+  "horizon_end": "2030-03-06",
+  "capacity_mode": "declared_assumption",
+  "working_day": {
+    "start": "07:00",
+    "end": "17:00",
+    "break_minutes": 30,
+    "break_after_minutes": 300
+  },
+  "cadence": {
+    "target_interval_days": 30,
+    "operational_tolerance_days": 5,
+    "proposal_tolerance_days": 3,
+    "preferred_windows": "soft; reported, never used to exclude a job"
+  },
+  "constraints_included": [
+    "resource availability",
+    "no shared physical resource across bundles per day",
+    "vehicle/equipment/skill compatibility",
+    "hard booking dates and blocked dates",
+    "daily access windows",
+    "directed travel matrix (missing = no route)",
+    "working day incl. break and return to depot"
+  ],
+  "constraints_excluded": [
+    "overnight stays",
+    "job splitting / multi-day jobs",
+    "weather and flying restrictions",
+    "battery and charging limits",
+    "fuel tank range",
+    "pilot duty-hour regulations"
+  ],
+  "cost_categories_included": [
+    "trip",
+    "vehicle_day",
+    "distance_km",
+    "fuel_km",
+    "personnel_person_day",
+    "allowance_person_day"
+  ],
+  "provenance": "fictional demo (examples/scheduling_demo/build_demo.py)",
+  "notes": "Entirely fictional demonstration scenario. Not company data; not an approved planning input."
+}

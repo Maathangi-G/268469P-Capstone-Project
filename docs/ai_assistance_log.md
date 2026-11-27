@@ -250,3 +250,81 @@ trailer. Published history is not rewritten to remove it.
 - It has not been fitted or evaluated on operational targets.
 - No real predictive-performance results are available.
 - Correction: the milestone changes 26 files (15 modified, 11 new), not 27 as first reported by the assistant.
+- Committed as `244ecac` (26 files, scoped `--only` commit with a `Co-Authored-By: Claude Opus 5.5` trailer)
+  and pushed to `origin/main` under the approval above.
+
+---
+
+## 2026-11-27 - Session 6: milestone 4, rule-based scheduling baseline
+
+### Student input
+- Specified the milestone: a deterministic rule-based scheduling baseline with explicit input contracts, a
+  fictional scenario, cost estimates without double counting, an independent checker, one app view and a
+  script. Kept separate from the coverage baseline. No staging, commit or push before review.
+- New standing instructions for future work: no automatic staging, committing or pushing; **no
+  `Co-Authored-By: Claude` trailer on future commits**; show the proposed file list and full commit
+  message before approval; keep this log truthful.
+- Asked the assistant to merge `{"attribution": {"commit": ""}}` into the repository's untracked
+  `.claude/settings.local.json`.
+
+### AI work (uncommitted, awaiting student review)
+- Inspected the repository (tests before changes: 131 passed) and the existing private input templates
+  (`pilot_availability_template` and `physical_vehicle_template`, both empty; not used as inputs).
+- Wrote `src/agriflight/scheduling/` (contracts, rule_baseline, costs, checker, outputs),
+  `app/scheduling_view.py`, a new synthetic-mode tab in `app/app.py`, `scripts/run_schedule.py`, the
+  fictional `examples/scheduling_demo/` scenario and its generator, two test files plus a fixture builder,
+  and documentation (`docs/scheduling_baseline.md` and updates). The private dataset was not used.
+- Claude Code settings: version 2.1.332 supports `attribution.commit` (its bundled schema says an empty
+  string hides attribution). No managed policy file exists. Created the repository's
+  `.claude/settings.local.json` containing only that setting (no earlier file existed) and added it to
+  `.gitignore`. Whether it is loaded could not be verified inside this session, which was opened at the
+  parent workspace folder.
+- Corrected one of its own test expectations (an arithmetic error in an expected cost total).
+
+### AI decisions (pending student review)
+| # | Decision | Alternatives considered |
+| --- | --- | --- |
+| D25 | Bundles are processed in bundle_id order each day, and a resource used by an earlier bundle blocks later bundles that day. | Rejecting overlapping bundles at input (would forbid valid alternate team compositions). |
+| D26 | Candidate order: earliest planning due date, then travel minutes from the current location, then job_id. | Nearest-neighbour first (ignores due dates). |
+| D27 | Break rule: one break once the day exceeds the threshold, placed after the first job ending past it (else after the last job); never mid-job. | Fixed clock-time break; break inside a job. |
+| D28 | A missing availability row means "not available". | Treating missing as available (would invent availability). |
+| D29 | Cost levels: trip and vehicle-day once per bundle-day route; km over all legs; person-day rates times pilot count; fuel not added when an all-inclusive rate applies. | Per-job allocation of vehicle-day costs. |
+| D30 | Due-date deviation is reported under both ±5 and ±3; the preferred window is reported separately and never excludes a job. | Treating ±5 as a hard window. |
+| D31 | The demo scenario lives in `examples/` (not `data/sample/`, which `.gitignore` restricts). | Adding `.gitignore` exceptions. |
+
+### AI verification (performed by the assistant, not the student)
+- Test suite after changes: 171 passed.
+- Fictional demo run: 7 of 11 jobs scheduled; all independent checks passed.
+
+### Focused review requested by the student (2026-11-27)
+- The student asked for clarification of JOB_09's date windows, the cost label and the resource policy,
+  with no new features.
+- Finding (assistant): the calculations were correct, but the assistant's report wording was ambiguous.
+  "2 days outside its preferred window" referred to the job's own supplied window; "within ±5 but not ±3"
+  referred to the windows around the due date.
+- Changes (assistant), all to labels and coverage:
+  - The assignments output now has distinct columns: the signed offset from the due date; the operational
+    ±5 and proposal ±3 windows with deviation = max(0, |offset| − tolerance); and the job's own preferred
+    window (signed deviation, never replaced by a formula). The redundant true/false columns were removed.
+  - The resource-reservation rule was added to the assumptions output.
+  - View and documentation wording was updated: known estimated cost is not a complete budget; whole-day
+    resource reservation is a conservative version-1 restriction with no within-day handover.
+  - Tests were added for window boundaries (early and late at ±3, ±5 and beyond), a JOB_09 regression
+    check, a signed custom-window check, and an explicit zero-cost rate versus a missing rate.
+- Resource policy confirmed from the code: resources are reserved for the whole day only when their
+  bundle actually receives a job; bundles are taken in bundle_id order. Handovers were not implemented.
+- Test suite after these changes: 181 passed.
+
+### Student actions
+- 2026-11-27: the student **approved committing and pushing** this milestone, limited to the 34 listed
+  files (stated by the student).
+- Not stated by the student: review of the implementation code, manual browser checks of the new tab, or
+  individual review of decisions D25-D31.
+
+### Limitations at commit (as recorded by the assistant)
+- Demonstrated on a fictional scenario only; not validated on company operations.
+- Capacity and cost rates are declared assumptions, not ML predictions.
+- The known estimated cost is incomplete where rates are missing (the allowance rate in the demo).
+- Version 1: daily return to depot, whole-day resource reservation, no handovers, no overnight stays,
+  no job splitting.
+- Commit message written without a Claude co-author trailer, per the student's instruction.

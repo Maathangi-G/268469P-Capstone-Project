@@ -23,6 +23,7 @@ if str(APP_DIR) not in sys.path:  # allow importing sibling view modules
     sys.path.insert(0, str(APP_DIR))
 
 import operational_views  # noqa: E402
+import scheduling_view  # noqa: E402
 
 from agriflight import __version__  # noqa: E402
 from agriflight.operational import session as operational_session  # noqa: E402
@@ -198,7 +199,8 @@ def _quality(frame: pd.DataFrame | None, report: ValidationReport | None, load_e
 
 def _status() -> None:
     st.subheader("Project Status")
-    st.markdown(f"**{status.MILESTONE}**. This is a foundation milestone, not a model or a scheduler.")
+    st.markdown(f"**{status.MILESTONE}**. No trained model and no optimised scheduler; the scheduling baseline is "
+                "a rule-based draft on fictional inputs.")
 
     c1, c2 = st.columns(2)
     with c1:
@@ -249,8 +251,8 @@ def main() -> None:
     if load_error:
         st.error(f"Could not load data: {load_error}")
 
-    tab_overview, tab_explorer, tab_quality, tab_status = st.tabs(
-        ["Overview", "Data Explorer", "Data Quality", "Project Status"]
+    tab_overview, tab_explorer, tab_quality, tab_schedule, tab_status = st.tabs(
+        ["Overview", "Data Explorer", "Data Quality", "Scheduling baseline", "Project Status"]
     )
     with tab_overview:
         _overview(frame, source)
@@ -258,6 +260,8 @@ def main() -> None:
         _explorer(frame)
     with tab_quality:
         _quality(frame, report, load_error)
+    with tab_schedule:
+        scheduling_view.render()
     with tab_status:
         _status()
 

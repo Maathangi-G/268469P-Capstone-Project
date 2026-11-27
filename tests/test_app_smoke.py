@@ -49,7 +49,11 @@ def test_app_runs_with_bundled_demo():
     assert "Synthetic demonstration data" in text
     assert "Validation failed: 7 error(s)" in text
     assert "No validation errors" not in text
-    assert [t.label for t in at.tabs] == ["Overview", "Data Explorer", "Data Quality", "Project Status"]
+    assert [t.label for t in at.tabs] == ["Overview", "Data Explorer", "Data Quality", "Scheduling baseline",
+                                          "Project Status"]
+    text = _all_text(at)
+    assert "Synthetic demonstration scenario" in text
+    assert "Not dispatch authorisation" in text
     labels = [m.label for m in at.metric]
     assert "Source records (rows)" in labels
     assert at.metric[0].value == "27"

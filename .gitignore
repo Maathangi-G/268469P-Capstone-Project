@@ -51,6 +51,8 @@ mlruns/
 *.pem
 *.key
 .streamlit/secrets.toml
+# Personal Claude Code settings (never committed)
+.claude/settings.local.json
 
 # Python environments, caches and build output
 .venv/

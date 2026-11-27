@@ -6,7 +6,7 @@ Nothing here is a measured result.
 
 from __future__ import annotations
 
-MILESTONE = "Milestone 3 - EDA, coverage-target feasibility and guarded baseline (v0.3.0, awaiting student review)"
+MILESTONE = "Milestone 4 - rule-based scheduling baseline on fictional scenarios (v0.4.0, awaiting student review)"
 
 CADENCE_POLICY = {
     "target_interval_days": 30,
@@ -33,6 +33,8 @@ IMPLEMENTED = [
     "Reproducible EDA: completeness, recorded-date history, gaps between recorded capture dates, area evidence, overlap.",
     "Coverage-target feasibility report and feature-availability review (results private).",
     "Historical-mean baseline: implemented and tested; not fitted or evaluated on operational targets.",
+    "Rule-based scheduling baseline: draft itineraries, estimated costs and an independent checker "
+    "(fictional scenarios only; not optimisation, not dispatch authorisation).",
 ]
 
 PENDING = [
@@ -40,7 +42,9 @@ PENDING = [
     "Verified daily-hectare targets: coverage-model training is blocked until they exist.",
     "Cadence-window evaluation on approved service records.",
     "Fitting/evaluating the baseline and ML models (proposal section 3.2) on verified targets.",
-    "Cadence-aware scheduling, routing and resource allocation (proposal section 3.3).",
+    "Approved real planning scenario (due dates, resources, availability, depots, travel matrix, rates).",
+    "OR-Tools scheduling/routing and its comparison with the rule-based baseline (proposal section 3.3).",
+    "Overnight stays and multi-day jobs (not supported by the baseline version 1).",
     "Weather-informed replanning, scenario and cost analysis (proposal sections 3.4-3.6).",
 ]
 
@@ -57,7 +61,8 @@ OPEN_DECISIONS = [
 NOT_CLAIMED = [
     "No model has been trained; no accuracy, error or prediction results exist.",
     "No completed services, due dates, overdue, late or cancellation labels have been derived.",
-    "No scheduling improvement, travel saving or cost saving is claimed.",
+    "No scheduling improvement, optimisation superiority, travel saving or cost saving is claimed.",
+    "Scheduling outputs are drafts on fictional inputs; no company division is made scheduler-ready.",
     "Source observations are not treated as completed flights or reconciled services.",
     "Budget rows are historical estimates, not actual spend or a forecast budget.",
 ]

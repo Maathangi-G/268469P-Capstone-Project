@@ -40,6 +40,18 @@ Private-mode components:
 | Baseline | `src/agriflight/baselines/baseline.py` | Guarded historical-mean baseline (single grain, verified targets, chronological split). Not fitted to operational data. |
 | Script | `scripts/run_eda.py` | Reproducible private EDA run (see [eda_methodology.md](eda_methodology.md)). |
 
+Scheduling baseline components (see [scheduling_baseline.md](scheduling_baseline.md)):
+
+| Component | Location | Responsibility |
+| --- | --- | --- |
+| Input contracts | `src/agriflight/scheduling/contracts.py` | Scenario folder loader and validator (jobs, bundles, resources, availability, locations, directed travel, cost rates). |
+| Rule baseline | `src/agriflight/scheduling/rule_baseline.py` | Deterministic greedy day-by-day, bundle-by-bundle rule; route simulation; unassigned-job diagnosis. |
+| Costs | `src/agriflight/scheduling/costs.py` | Itinerary cost estimates by explicit rate level; unknown rates stay unknown. |
+| Checker | `src/agriflight/scheduling/checker.py` | Independent validation of assignments, resources, continuity, time, hard constraints and cost arithmetic. |
+| Outputs | `src/agriflight/scheduling/outputs.py` | Tables shared by the app view and the script. |
+| View / script | `app/scheduling_view.py`, `scripts/run_schedule.py` | Synthetic-mode tab; command-line runs (private scenarios kept outside Git). |
+| Demo scenario | `examples/scheduling_demo/` | Entirely fictional inputs plus their generator. |
+
 ## Synthetic-mode components (v0.1.0, unchanged)
 
 | Component | Location | Responsibility |
@@ -97,5 +109,5 @@ mutates it.
 | `agriflight.ledger` - completed-service event ledger | Needs the completion rule (multi-day captures), service episodes and onboarding dates. |
 | `agriflight.cadence` - cadence evaluation | 30-day target; operational +/-5 vs proposal +/-3 kept distinct; only once the anchor and eligible periods are confirmed. |
 | Coverage prediction models | Historical-mean baseline implemented (not fitted); ML (proposal 3.2) blocked until verified daily-hectare targets exist. |
-| `agriflight.scheduling` / routing | OR-Tools based scheduling and routing (proposal 3.3). |
+| OR-Tools scheduling and routing | Planned (proposal 3.3); to be compared with the rule-based baseline on identical scenarios using the shared cost and checker modules. |
 | API layer | Thin Python API over these services (proposal 3.5). |

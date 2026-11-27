@@ -33,10 +33,26 @@ AgriFlight AI capstone (G. Maathangi, 268469P). Public GitHub repository.
 - EDA outputs go only to `..\Analysis_Private\...` via `scripts/run_eda.py`; never into the repository.
 - Do not fit or report any model on operational data unless verified, eligible targets exist.
 
-## Work in reviewed increments
-- Explain changes and wait for the student's explicit approval before any
-  commit or push. Record AI work and student actions separately in
-  `docs/ai_assistance_log.md`; never record student review unless stated.
+## Scheduling baseline (milestone 4)
+- Capacity comes only from declared scenario assumptions; no ML, no 500 ha/day default, no
+  productivity from pilot scores. Missing travel is no route (never zero); missing availability
+  is unavailable; blank cost rates are unknown (never zero).
+- Planning due dates must be explicit approved inputs - never derived from
+  `last_recorded_capture_date`. Do not change `scheduler_ready` flags in the dataset.
+- Real scenarios and their outputs stay outside Git and outside the dataset package.
+- Results are drafts, not dispatch authorisation; no optimisation superiority is claimed.
+
+## Work in reviewed increments (future workflow)
+- No automatic staging, committing or pushing. Finish, test and report; then wait for the
+  student's explicit approval of that specific change set.
+- Before asking for approval, show the exact proposed file list and the full commit message
+  (including the author/committer that will be recorded).
+- Do NOT add a "Co-Authored-By: Claude ..." trailer to future commits. If a commit cannot be
+  created without it, do not commit: give the student exact PowerShell commands instead
+  (explicit paths, `git commit --only`, `Data.ipynb` and private data excluded).
+- Stage explicit paths only (never `git add .` / `-A`); keep `Data.ipynb` staged and excluded.
+- Record AI work and student actions separately in `docs/ai_assistance_log.md`; never record
+  student review unless stated; never remove earlier records of AI assistance.
 
 ## Test before committing
 - `python -m pytest` must pass before any commit.

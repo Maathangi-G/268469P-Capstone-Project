@@ -1,0 +1,9 @@
+rate_id,category,applies_to,amount_lkr,includes_fuel,input_status,provenance
+RATE_TRIP,trip,*,500,,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+RATE_VDAY_4WD,vehicle_day,4wd_pickup,18000,False,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+RATE_VDAY_CAR,vehicle_day,car,9000,False,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+RATE_KM_4WD,distance_km,4wd_pickup,40,False,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+RATE_KM_CAR_ALLIN,distance_km,car,60,True,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+RATE_FUEL_4WD,fuel_km,4wd_pickup,55,,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+RATE_PERSON_DAY,personnel_person_day,*,7500,,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+RATE_ALLOWANCE,allowance_person_day,*,,,assumption,fictional demo (examples/scheduling_demo/build_demo.py)

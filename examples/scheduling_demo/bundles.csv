@@ -1,0 +1,4 @@
+bundle_id,depot_location_id,pilot_ids,vehicle_id,equipment_ids,work_rate_ha_per_hour,setup_min,input_status,provenance
+TEAM_A,DEPOT_NORTH,PIL_A1|PIL_A2,VEH_4WD_1,DRN_MS_1,40,20,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+TEAM_B,DEPOT_SOUTH,PIL_B1,VEH_CAR_1,DRN_RGB_1,30,15,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+TEAM_C,DEPOT_NORTH,PIL_C1,VEH_CAR_2,DRN_MS_1,35,20,assumption,fictional demo (examples/scheduling_demo/build_demo.py)

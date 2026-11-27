@@ -1,0 +1,5 @@
+pilot_id,skills,input_status,provenance
+PIL_A1,multispectral|rgb,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+PIL_A2,rgb,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+PIL_B1,rgb,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
+PIL_C1,multispectral|rgb,assumption,fictional demo (examples/scheduling_demo/build_demo.py)
