@@ -21,7 +21,8 @@ from operational_fixtures import build_package  # noqa: E402
 APP = Path(__file__).resolve().parents[1] / "app" / "app.py"
 MODE_PRIVATE = "Private operational dataset"
 MODE_SYNTHETIC = "Synthetic demonstration (default)"
-PRIVATE_TABS = ["Divisions & readiness", "Operational records", "Budget & vehicle evidence", "Data quality", "Project Status"]
+PRIVATE_TABS = ["Divisions & readiness", "Operational records", "Budget & vehicle evidence", "Data quality",
+                "EDA & coverage readiness", "Project Status"]
 SYNTHETIC_BANNER = "Every row is fictional"  # wording unique to the synthetic-data banner
 
 
@@ -97,6 +98,8 @@ def test_private_mode_with_fixture_package(monkeypatch, tmp_path):
     assert "pseudonymised REAL data" in text
     assert SYNTHETIC_BANNER not in text
     assert "No structural errors from the application checks" in text
+    assert "Coverage-model training blocked" in text
+    assert "not fitted or evaluated on operational targets" in text
 
 
 def test_switching_modes_has_no_stale_results(monkeypatch, tmp_path):

@@ -3,7 +3,7 @@
 Capstone project (Master's in Data Science and AI, G. Maathangi, 268469P):
 **Agri-Flight AI - decision support for agricultural drone-operation planning.**
 
-> **Current scope: v0.2.0 (milestone 2 awaiting review).** A local Streamlit
+> **Current scope: v0.3.0 (milestone 3 - EDA and coverage readiness - awaiting review).** A local Streamlit
 > dashboard with two explicit data modes:
 > - **Synthetic demonstration** (default): the public demo schema, loader,
 >   validator and summaries.
@@ -82,6 +82,17 @@ app shows an error rather than substitute data. Do not put the path in a
 committed file. See [docs/operational_dataset.md](docs/operational_dataset.md)
 for supported tables, join rules and budget safeguards.
 
+## Reproducible EDA (private outputs)
+
+```powershell
+$env:AGRIFLIGHT_DATA_DIR = (Resolve-Path "..\Dataset\AgriFlight_Integrated_v0_2").Path
+python scripts/run_eda.py
+```
+
+The results are written to `..\Analysis_Private\eda_v0_1`, outside the repository and the dataset. Never
+copy them into this repository. Methods and limitations are in
+[docs/eda_methodology.md](docs/eda_methodology.md).
+
 ## Run the tests
 
 ```bash
@@ -111,7 +122,9 @@ python -m pytest
 | Summary service (counts, date ranges, blanks) | Implemented, tested |
 | Streamlit dashboard (4 views, in-memory upload) | Implemented; headless smoke-tested |
 | Private-mode read-only integration (18 tables, 4 views) | Implemented; tested with fictional fixtures; awaiting student review |
-| Further operational tables (areas, plans, trials, daily evidence) | Planned |
+| EDA, coverage-target feasibility, feature-availability review | Implemented; run on private data (results private); awaiting student review |
+| Historical-mean baseline | Implemented and tested; not fitted or evaluated on operational targets |
+| Coverage prediction models (ML) | Blocked: no verified daily-hectare targets in the inspected package |
 | Completed-service event ledger, cadence (30 +/- 5 days) evaluation | Planned - business rules unconfirmed |
 | Coverage prediction (baseline + ML), scheduling, routing, cost & scenario analysis | Planned (see proposal) |
 
@@ -125,6 +138,8 @@ src/agriflight/data/validation.py  Data-quality rules -> issue table
 src/agriflight/services/           Summaries and project-status content
 src/agriflight/operational/        Private-package contract, loader, checks, summaries
 app/operational_views.py           Private-mode views (presentation only)
+src/agriflight/baselines/          Guarded historical-mean baseline
+scripts/run_eda.py                 Reproducible private EDA run
 data/sample/                       Synthetic demonstration data only
 tests/                             pytest suite (incl. headless app smoke test)
 docs/                              Architecture, data contract, checkpoint notes

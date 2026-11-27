@@ -195,9 +195,55 @@ BASE_ROWS: dict[str, list[dict[str, str]]] = {
         {"rule": "operational_tolerance_days", "value": "5", "status": "user_stated", "interpretation": "Fixture rule."},
         {"rule": "proposal_tolerance_days", "value": "3", "status": "submitted_proposal", "interpretation": "Fixture rule."},
     ],
+    # ---- analysis tables ------------------------------------------------
+    "daily_work_evidence": [
+        {"daily_evidence_id": "DAY_T1", "operation_unit_id": "OPU_T1", "division_id": "DIV_T1", "recorded_date": "2026-01-10",
+         "source_observation_count": "1", "source_observation_ids": "OBS_0001", "actual_covered_ha": "",
+         "target_measured": F, "training_eligible": F, "blocking_reason": "Fixture: no verified day-level hectares."},
+        {"daily_evidence_id": "DAY_T2", "operation_unit_id": "OPU_T1", "division_id": "DIV_T1", "recorded_date": "2026-03-05",
+         "source_observation_count": "1", "source_observation_ids": "OBS_0002", "actual_covered_ha": "",
+         "target_measured": F, "training_eligible": F, "blocking_reason": "Fixture: no verified day-level hectares."},
+    ],
+    "area_evidence": [
+        # Two field-grain rows and a parent division summary covering them: never sum all three.
+        {"area_record_id": "ARE_T1", "division_id": "DIV_T1", "operation_unit_id": "OPU_T1",
+         "identity_link_method": "exact_normalized_source_text", "record_grain": "field", "crop": "Coconut",
+         "maturity": "Mature", "boundary_area_ha": "10.0", "area_scope_status": "mixed_grain_do_not_sum_all_rows",
+         "source_id": "SRC_T4", "sheet_id": "SHT_T6", "source_row": "2"},
+        {"area_record_id": "ARE_T2", "division_id": "DIV_T1", "operation_unit_id": "OPU_T1",
+         "identity_link_method": "exact_normalized_source_text", "record_grain": "field", "crop": "Coconut",
+         "maturity": "Immature", "boundary_area_ha": "15.5", "area_scope_status": "mixed_grain_do_not_sum_all_rows",
+         "source_id": "SRC_T4", "sheet_id": "SHT_T6", "source_row": "3"},
+        {"area_record_id": "ARE_T3", "division_id": "DIV_T1", "operation_unit_id": "",
+         "identity_link_method": "unique_named_hierarchy_match", "record_grain": "division_or_farm",
+         "boundary_area_ha": "25.5", "farm_total_area_ha": "60", "contract_area_ha": "24",
+         "area_scope_status": "mixed_grain_do_not_sum_all_rows", "source_id": "SRC_T5", "sheet_id": "SHT_T7", "source_row": "4"},
+        {"area_record_id": "ARE_T4", "division_id": "", "operation_unit_id": "", "identity_link_method": "unresolved",
+         "record_grain": "farm", "boundary_area_ha": "40", "farm_total_area_ha": "40",
+         "area_scope_status": "mixed_grain_do_not_sum_all_rows", "source_id": "SRC_T5", "sheet_id": "SHT_T7", "source_row": "5"},
+    ],
+    "observation_overlap_review": [
+        {"overlap_group_id": "OVL_T1", "division_or_operation_id": "DIV_T1", "recorded_date": "2026-01-10",
+         "observation_ids": "OBS_0001|OBS_0004", "source_layers": "main_monthly|older_archive", "record_count": "2",
+         "resolution": "not_deduplicated_service_scope_unknown"},
+    ],
+    "planned_team_days": [
+        {"schedule_day_id": "SDY_T1", "planned_date": "2026-01-09", "team_reference": "TEAM_T1", "planned_coverage_ha": "120",
+         "planned_travel_km": "80", "vehicle_model_id": "VMD_T1", "actual_execution_confirmed": F,
+         "source_id": "SRC_T1", "sheet_id": "SHT_T8"},
+        {"schedule_day_id": "SDY_T2", "planned_date": "2026-01-10", "team_reference": "TEAM_T1", "planned_coverage_ha": "",
+         "planned_travel_km": "", "actual_execution_confirmed": F, "source_id": "SRC_T1", "sheet_id": "SHT_T8"},
+    ],
+    "trial_observations": [
+        {"trial_id": "TRL_T1", "division_id": "DIV_ZZ9", "identity_link_method": "exact_normalized_source_text",
+         "trial_date": "2026-02-02", "recorded_extent_ha": "5.5", "recurring_service_eligibility": "not_assumed",
+         "completion_status": "not_inferred", "source_id": "SRC_T1", "sheet_id": "SHT_T9", "source_row": "3"},
+    ],
+    "daily_coverage_template": [],
 }
 
-TEMPLATE_COLUMNS = {name: ["record_id", "evidence_reference"] for name in KNOWN_TEMPLATES}
+# Header-only templates not otherwise described by the application contract.
+TEMPLATE_COLUMNS = {name: ["record_id", "evidence_reference"] for name in KNOWN_TEMPLATES if name not in TABLES}
 
 Mutator = Callable[[dict[str, list[dict[str, str]]], dict[str, list[str]]], None]
 

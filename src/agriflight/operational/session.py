@@ -10,7 +10,7 @@ back to synthetic mode.
 from __future__ import annotations
 
 from collections.abc import MutableMapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import pandas as pd
@@ -26,6 +26,7 @@ class LoadedOperational:
     signature: tuple
     dataset: OperationalDataset
     findings: pd.DataFrame
+    eda_results: dict | None = field(default=None)  # computed lazily by the EDA view
 
 
 def package_signature(root: Path) -> tuple:

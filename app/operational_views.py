@@ -11,7 +11,9 @@ from collections.abc import Callable
 import pandas as pd
 import streamlit as st
 
+from agriflight.operational import eda
 from agriflight.operational import summaries as s
+from agriflight.operational.eda_report import build_results
 from agriflight.operational.contract import (
     DEFAULT_OBSERVATION_LAYER,
     ENV_VAR,
@@ -288,11 +290,86 @@ def _quality(loaded: LoadedOperational) -> None:
         _table(rules)
 
 
+# ------------------------------------------------------------- E
+def _eda(loaded: LoadedOperational) -> None:
+    if loaded.eda_results is None:
+        loaded.eda_results = build_results(loaded.dataset)
+    r = loaded.eda_results
+    st.subheader("EDA and coverage-target readiness")
+    st.caption(
+        "Descriptive analysis of source records. Unit: source observation rows unless stated; layers are never "
+        f"combined; date basis `{eda.DATE_BASIS}`. Missing history is not read as onboarding, inactivity or "
+        "missed visits. Nothing here is written to disk; use the script below for private exports."
+    )
+
+    st.markdown("### Coverage-model target feasibility")
+    if r["training_blocked"]:
+        st.error(r["training_status"])
+    else:
+        st.warning(r["training_status"])
+    st.caption("Scope: the inspected integrated package only - not a conclusion about every company source. "
+               "Categories are kept apart: observed completed workload, estimated achievable capacity "
+               "(no source supplied), planned work and static farm area. A small completed job does not reveal "
+               "maximum daily capacity.")
+    _table(r["coverage_feasibility"])
+    with st.expander("Exclusion reasons (non-exclusive counts per source)"):
+        _table(r["coverage_exclusions"])
+    st.info(f"Historical-mean baseline: {r['baseline_status']}")
+    with st.expander("Feature availability at scheduling time (AI-proposed, provisional - not validated)"):
+        _table(r["feature_availability"])
+
+    st.markdown("### A. Completeness and recorded-date history")
+    layer = st.selectbox("Source layer for history and gaps", OBSERVATION_LAYERS,
+                         index=OBSERVATION_LAYERS.index(DEFAULT_OBSERVATION_LAYER), key="eda_layer")
+    st.markdown("**Missing / unknown-reference values by field (rows per layer)**")
+    _table(r["completeness"][r["completeness"]["source_layer"] == layer])
+    st.markdown("**Undated and unmapped source rows (all layers, kept separate)**")
+    _table(r["undated_unmapped"])
+    st.markdown(f"**Recorded-date coverage per operating unit - layer `{layer}`**")
+    st.caption("Rows without an operation_unit_id are excluded here and counted above. Same-date repeat rows "
+               "are rows sharing a unit and date; they are kept in the source.")
+    st.json(r[f"history_overview_{layer}"], expanded=False)
+    _table(r[f"unit_history_{layer}"], height=280)
+
+    st.markdown(f"### B. {eda.GAP_LABEL.capitalize()} - layer `{layer}`")
+    st.caption(
+        "Days between consecutive DISTINCT recorded dates for one operation unit within one layer. Same-date "
+        "repetitions count once for this calculation only; contributing observation IDs are listed for "
+        "traceability. These are not verified monitoring-cycle intervals and are not late/on-time labels; a "
+        "short gap is not evidence of a separate completed service."
+    )
+    st.json(r[f"gap_summary_{layer}"], expanded=False)
+    bands = r[f"gap_distribution_{layer}"]
+    if not bands.empty:
+        st.bar_chart(bands, x="gap_days_band", y="gaps", x_label="Gap length band (days)", y_label="Gaps (count)")
+    with st.expander("Gap rows with contributing observation IDs"):
+        _table(r[f"recorded_date_gaps_{layer}"], height=280)
+
+    st.markdown("### C. Area evidence (no cross-grain sums)")
+    st.caption("Area types (tracker imaging, boundary, farm total, contract) and record grains are reported "
+               "separately; field rows and parent summaries are never added together. Areas are snapshots without "
+               "effective dates, not historical daily productivity. Identity links are shown as supplied.")
+    _table(r["area_availability"])
+    _table(r["area_distribution"])
+    with st.expander("By record grain, crop and maturity (boundary area, hectares)"):
+        _table(r["area_by_crop_maturity"])
+
+    st.markdown("### D. Source overlap (supplied review)")
+    st.caption("Candidate overlaps between or within layers. Not confirmed duplicates; no source precedence is "
+               "chosen and the layers are not concatenated into an independent-flight count.")
+    _table(r["overlap_summary"])
+    st.json(r["overlap_overview"], expanded=False)
+
+    st.markdown("### Reproduce privately")
+    st.code('$env:AGRIFLIGHT_DATA_DIR = (Resolve-Path "..\\Dataset\\AgriFlight_Integrated_v0_2").Path\n'
+            "python scripts/run_eda.py   # writes to ..\\Analysis_Private\\eda_v0_1", language="powershell")
+
+
 def render(loaded: LoadedOperational, status_renderer: Callable[[], None]) -> None:
     st.warning(PRIVATE_NOTICE, icon="🔒")
     st.caption(f"Package folder: {loaded.dataset.root.name} (from {ENV_VAR}); {len(loaded.dataset.tables)} tables loaded.")
     tabs = st.tabs(["Divisions & readiness", "Operational records", "Budget & vehicle evidence",
-                    "Data quality", "Project Status"])
+                    "Data quality", "EDA & coverage readiness", "Project Status"])
     with tabs[0]:
         _divisions(loaded)
     with tabs[1]:
@@ -302,4 +379,6 @@ def render(loaded: LoadedOperational, status_renderer: Callable[[], None]) -> No
     with tabs[3]:
         _quality(loaded)
     with tabs[4]:
+        _eda(loaded)
+    with tabs[5]:
         status_renderer()

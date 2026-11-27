@@ -192,7 +192,7 @@ def load_package(root: Path) -> OperationalDataset:
         path = root / "data" / f"{name}.csv"
         if not path.exists():
             findings.append(finding("error" if spec.role == "main" else "warning", "table_file_missing",
-                                    name, explanation=f"data/{name}.csv not found; dependent views are limited."))
+                                    name, explanation=f"data/{name}.csv not found; dependent views/analyses are limited."))
             continue
         try:
             frame = _read_csv_text(path)

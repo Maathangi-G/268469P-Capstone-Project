@@ -28,7 +28,10 @@ AgriFlight AI capstone (G. Maathangi, 268469P). Public GitHub repository.
 - Tests use fictional fixtures (`tests/operational_fixtures.py`), never real rows.
 - Budget: one cost per fuel trip, no allocation to linked farms, rollups never
   added to detail, actual-recorded kept separate, missing never zero.
-- Do not name tracked files with "private" (the `.gitignore` would hide them).
+- Do not name tracked files with "private", and do not name packages `models/` (the `.gitignore`
+  would hide them). Check `git status --ignored` after adding new folders.
+- EDA outputs go only to `..\Analysis_Private\...` via `scripts/run_eda.py`; never into the repository.
+- Do not fit or report any model on operational data unless verified, eligible targets exist.
 
 ## Work in reviewed increments
 - Explain changes and wait for the student's explicit approval before any

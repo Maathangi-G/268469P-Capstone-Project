@@ -6,7 +6,7 @@ Nothing here is a measured result.
 
 from __future__ import annotations
 
-MILESTONE = "Milestone 2 - read-only operational dataset integration (v0.2.0, awaiting student review)"
+MILESTONE = "Milestone 3 - EDA, coverage-target feasibility and guarded baseline (v0.3.0, awaiting student review)"
 
 CADENCE_POLICY = {
     "target_interval_days": 30,
@@ -30,13 +30,16 @@ IMPLEMENTED = [
     "Descriptive views: divisions/readiness, source observations by layer, budget and vehicle evidence, data quality.",
     "Budget safeguards: one row per fuel trip, no cost allocation to linked farms, rollups kept separate.",
     "Automated tests with fictional relational fixtures (no real rows).",
+    "Reproducible EDA: completeness, recorded-date history, gaps between recorded capture dates, area evidence, overlap.",
+    "Coverage-target feasibility report and feature-availability review (results private).",
+    "Historical-mean baseline: implemented and tested; not fitted or evaluated on operational targets.",
 ]
 
 PENDING = [
     "Approved completion rule and completed-service ledger (input contract empty).",
-    "Measured daily hectares for coverage modelling (input contract empty).",
+    "Verified daily-hectare targets: coverage-model training is blocked until they exist.",
     "Cadence-window evaluation on approved service records.",
-    "Daily coverage prediction baseline and ML models (proposal section 3.2).",
+    "Fitting/evaluating the baseline and ML models (proposal section 3.2) on verified targets.",
     "Cadence-aware scheduling, routing and resource allocation (proposal section 3.3).",
     "Weather-informed replanning, scenario and cost analysis (proposal sections 3.4-3.6).",
 ]

@@ -151,7 +151,7 @@ trailer. Published history is not rewritten to remove it.
 ### Student actions
 - 2026-11-25: the student reported completing **manual browser verification** of the private dataset
   integration. The assistant did not observe this verification; it is recorded as the student's own statement.
-- Review of decisions D1-D16 and approval to commit: not yet given.
+- Review of decisions D1-D16 and approval to commit: not yet given at that point (approval recorded below).
 
 ### Pre-commit verification (assistant, 2026-11-25, at the student's request)
 - Boolean parsing: `True`/`False` parse correctly. Blank and whitespace-only become unknown. Other text
@@ -190,3 +190,63 @@ trailer. Published history is not rewritten to remove it.
   per-record arithmetic differences are kept separate from the package's subtotal reconciliation, and
   not all subtotals agree. Documented the accepted boolean trimming behaviour in
   `docs/operational_dataset.md` and the loader docstring. No behaviour changes.
+- Committed as `1b0e9d9` (24 files, scoped `--only` commit; `Data.ipynb` left staged) and pushed to
+  `origin/main` under the approval above.
+
+---
+
+## 2026-11-25 - Session 5: milestone 3, EDA, coverage feasibility and guarded baseline
+
+### Student input
+- Specified the milestone: reproducible EDA (completeness, history, gaps between recorded capture dates, area
+  evidence, overlap), a coverage-target feasibility report, a feature-availability review, a guarded
+  historical-mean baseline, one app view plus a script, private outputs only in `..\Analysis_Private\eda_v0_1`,
+  fictional-fixture tests and documentation. No staging, commit or push before review.
+- Restated that the multi-day allocation details are unknown.
+
+### AI work (uncommitted, awaiting student review)
+- Inspected the repository (tests before changes: 94 passed) and profiled the six additional tables
+  (aggregate output only). Recalculated the target findings from the files rather than hardcoding them.
+- Extended the existing contract and validation: an "analysis" role for the new tables, a "template" role
+  in which zero rows are valid, extra foreign keys, and a check of the overlap review's division-or-unit
+  reference. No second loader was written.
+- Wrote `operational/eda.py`, `operational/coverage.py`, `operational/eda_report.py`,
+  `baselines/baseline.py`, `scripts/run_eda.py`, the *EDA & coverage readiness* tab, fixture extensions,
+  five new test files and documentation (`docs/eda_methodology.md` and updates).
+- Ran the script on the real package. 26 private files were written to `..\Analysis_Private\eda_v0_1`.
+  The package's manifest hashes are unchanged.
+- Defects found and fixed by the assistant: a nullable-dtype error in the finiteness check; a test that
+  mixed exclusion reasons across sources; and the new `models/` package, which was hidden by the
+  repository's `models/` ignore rule (renamed to `baselines/`).
+
+### AI decisions (pending student review)
+| # | Decision | Alternatives considered |
+| --- | --- | --- |
+| D17 | Eligibility requires observed category + finite non-negative value + explicit verified flag + any eligibility flag + valid date; a verified zero is eligible. | Accepting numeric values without a verification flag (would treat unverified values as labels). |
+| D18 | Sources without a verification column (e.g. trial extent) are never eligible. | Treating trial extent as observed daily coverage (a trial job is not daily capacity). |
+| D19 | Gaps are per layer and operation unit, using distinct dates, with neutral length bands up to 180+ days. | Per division (identity links are not approved); bands around 30 days (would suggest cadence labels). |
+| D20 | Only an explicit `confirmed_duplicate` resolution counts as a confirmed duplicate. | Inferring confirmation from other resolution text. |
+| D21 | The feature-availability classification (three classes) is an AI-proposed review aid, **provisional** and not validated. | No classification. |
+| D22 | The baseline is not fitted on real data even if eligible records appear later; fitting needs a separate approved split. | Auto-fitting whenever eligible rows exist. |
+| D23 | The app view never writes files; only the script exports, to a validated folder outside any Git repository. | An export button in the app. |
+| D24 | Charts are exported as Altair HTML (already installed with Streamlit). | Adding matplotlib as a new dependency. |
+
+### AI verification (performed by the assistant, not the student)
+- Test suite after changes: 131 passed.
+- Headless app run on the real package: the new tab and all layer selections rendered without exception.
+  The blocked status and the baseline status were displayed.
+- Server startup: health `ok`, localhost only.
+
+### Student actions
+- 2026-11-27: the student **approved committing and pushing** this milestone, subject to final checks
+  (stated by the student).
+- Not stated by the student: review of the new code, manual browser checks of the new tab, or individual
+  review or validation of decisions D17-D24. D21 remains provisional.
+
+### Status at commit (as recorded by the assistant)
+- EDA was executed on operational records; the results are private, in `..\Analysis_Private\eda_v0_1`.
+- Coverage-target eligibility is zero in the inspected package.
+- `HistoricalMeanBaseline` is implemented and tested with fictional fixtures only.
+- It has not been fitted or evaluated on operational targets.
+- No real predictive-performance results are available.
+- Correction: the milestone changes 26 files (15 modified, 11 new), not 27 as first reported by the assistant.

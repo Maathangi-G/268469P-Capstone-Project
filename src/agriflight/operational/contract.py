@@ -40,7 +40,9 @@ KNOWN_TEMPLATES: tuple[str, ...] = (
 @dataclass(frozen=True)
 class TableSpec:
     name: str
-    role: str  # "main" (has a view) or "supporting" (joins and labels)
+    # "main" (has a view), "supporting" (joins/labels), "analysis" (EDA and
+    # coverage feasibility) or "template" (input contract; zero rows is valid).
+    role: str
     primary_key: str
     text_columns: tuple[str, ...] = ()
     date_columns: tuple[str, ...] = ()
@@ -95,11 +97,12 @@ TABLES: dict[str, TableSpec] = {
         TableSpec(
             "flight_observations", "main", "observation_id",
             text_columns=("source_layer", "operation_unit_id", "division_id", "identity_link_method",
-                          "daily_coverage_label_status", "completed_service_id", "completion_scope",
-                          "observation_status", "service_cadence_label") + PROVENANCE,
+                          "equipment_reference", "daily_coverage_label_status", "completed_service_id",
+                          "completion_scope", "observation_status", "service_cadence_label") + PROVENANCE,
             date_columns=("planned_date", "recorded_actual_date"),
             boolean_columns=("source_review_flags_present",),
             numeric_columns=("actual_daily_covered_ha",),
+            list_columns=("person_ids",),
             allowed_values={"source_layer": OBSERVATION_LAYERS},
         ),
         TableSpec(
@@ -199,11 +202,60 @@ TABLES: dict[str, TableSpec] = {
         ),
         TableSpec("rules_and_assumptions", "supporting", "rule",
                   text_columns=("value", "status", "interpretation")),
+        # ---- analysis tables (EDA / coverage feasibility) ---------------
+        TableSpec(
+            "daily_work_evidence", "analysis", "daily_evidence_id",
+            text_columns=("operation_unit_id", "division_id", "blocking_reason"),
+            date_columns=("recorded_date",),
+            boolean_columns=("target_measured", "training_eligible"),
+            numeric_columns=("source_observation_count", "actual_covered_ha"),
+            list_columns=("person_ids", "source_observation_ids"),
+        ),
+        TableSpec(
+            "area_evidence", "analysis", "area_record_id",
+            text_columns=("division_id", "operation_unit_id", "identity_link_method", "record_grain",
+                          "crop", "maturity", "area_scope_status") + PROVENANCE,
+            date_columns=("effective_date",),
+            numeric_columns=("boundary_area_ha", "farm_total_area_ha", "contract_area_ha"),
+        ),
+        TableSpec(
+            "observation_overlap_review", "analysis", "overlap_group_id",
+            text_columns=("division_or_operation_id", "source_layers", "resolution"),
+            date_columns=("recorded_date",),
+            numeric_columns=("record_count",),
+            list_columns=("observation_ids",),
+        ),
+        TableSpec(
+            "planned_team_days", "analysis", "schedule_day_id",
+            text_columns=("team_reference", "overnight_plan", "vehicle_model_id", "equipment_reference",
+                          "source_id", "sheet_id", "source_row"),
+            date_columns=("planned_date",),
+            boolean_columns=("actual_execution_confirmed",),
+            numeric_columns=("planned_coverage_ha", "planned_travel_km"),
+            list_columns=("person_ids",),
+        ),
+        TableSpec(
+            "trial_observations", "analysis", "trial_id",
+            text_columns=("division_id", "identity_link_method", "recurring_service_eligibility",
+                          "completion_status") + PROVENANCE,
+            date_columns=("trial_date",),
+            numeric_columns=("recorded_extent_ha",),
+        ),
+        TableSpec(
+            "daily_coverage_template", "template", "daily_work_id",
+            text_columns=("division_id", "team_id", "vehicle_id", "equipment_reference",
+                          "measurement_method", "evidence_reference"),
+            date_columns=("work_date",),
+            boolean_columns=("independent_label_verified",),
+            numeric_columns=("measured_covered_ha", "working_hours", "travel_hours"),
+            list_columns=("person_ids",),
+        ),
     )
 }
 
 MAIN_TABLES: tuple[str, ...] = tuple(n for n, s in TABLES.items() if s.role == "main")
 SUPPORTING_TABLES: tuple[str, ...] = tuple(n for n, s in TABLES.items() if s.role == "supporting")
+ANALYSIS_TABLES: tuple[str, ...] = tuple(n for n, s in TABLES.items() if s.role in ("analysis", "template"))
 
 FOREIGN_KEYS: tuple[ForeignKey, ...] = (
     ForeignKey("farms", "client_id", "clients", "client_id"),
@@ -236,4 +288,15 @@ FOREIGN_KEYS: tuple[ForeignKey, ...] = (
     ForeignKey("farm_vehicle_evidence", "vehicle_model_id", "vehicle_models", "vehicle_model_id"),
     ForeignKey("farm_vehicle_evidence", "target_id", "farms", "farm_id", condition_column="target_level", condition_value="farm"),
     ForeignKey("farm_vehicle_evidence", "target_id", "divisions", "division_id", condition_column="target_level", condition_value="division"),
+    ForeignKey("daily_work_evidence", "operation_unit_id", "operation_units", "operation_unit_id"),
+    ForeignKey("daily_work_evidence", "division_id", "divisions", "division_id"),
+    ForeignKey("daily_work_evidence", "source_observation_ids", "flight_observations", "observation_id", is_list=True),
+    ForeignKey("area_evidence", "division_id", "divisions", "division_id"),
+    ForeignKey("area_evidence", "operation_unit_id", "operation_units", "operation_unit_id"),
+    ForeignKey("observation_overlap_review", "observation_ids", "flight_observations", "observation_id", is_list=True),
+    ForeignKey("planned_team_days", "vehicle_model_id", "vehicle_models", "vehicle_model_id"),
+    ForeignKey("trial_observations", "division_id", "divisions", "division_id"),
+    ForeignKey("daily_coverage_template", "division_id", "divisions", "division_id"),
 )
+# observation_overlap_review.division_or_operation_id may reference either
+# divisions or operation_units; checked separately in validation.

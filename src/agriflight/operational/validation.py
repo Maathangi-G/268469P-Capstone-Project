@@ -38,8 +38,8 @@ def _columns_and_keys(ds: OperationalDataset) -> list[dict]:
         for column in missing:
             out.append(finding("error", "required_column_missing", name, column,
                                explanation="Column required by the application contract is absent."))
-        if raw.empty:
-            out.append(finding("error", "table_empty", name,
+        if raw.empty and spec.role != "template":
+            out.append(finding("error" if spec.role == "main" else "warning", "table_empty", name,
                                explanation="Table has a header but no rows; it is not a template."))
         pk = spec.primary_key
         if pk not in raw.columns:
@@ -91,6 +91,24 @@ def _foreign_keys(ds: OperationalDataset) -> list[dict]:
                                ", ".join(orphans[:MAX_EXAMPLES]),
                                f"{len(orphans)} row(s) reference a {fk.ref_table}.{fk.ref_column} that does not exist."))
     return out
+
+
+def _overlap_targets(ds: OperationalDataset) -> list[dict]:
+    """overlap review rows reference a division OR an operation unit."""
+    review = ds.raw.get("observation_overlap_review")
+    if review is None or "division_or_operation_id" not in review.columns:
+        return []
+    known: set[str] = set()
+    for table, key in (("divisions", "division_id"), ("operation_units", "operation_unit_id")):
+        if table in ds.raw:
+            known |= set(ds.raw[table][key].astype(str))
+    values = review["division_or_operation_id"].astype(str).str.strip()
+    bad = review.loc[(values != "") & ~values.isin(known), "overlap_group_id"]
+    if bad.empty:
+        return []
+    return [finding("error", "foreign_key_orphan", "observation_overlap_review", "division_or_operation_id",
+                    ", ".join(bad.astype(str).head(MAX_EXAMPLES)),
+                    f"{len(bad)} row(s) reference neither a known division nor operation unit.")]
 
 
 def _hierarchy(ds: OperationalDataset) -> list[dict]:
@@ -145,7 +163,7 @@ def _snapshot(ds: OperationalDataset) -> list[dict]:
 def validate_operational(ds: OperationalDataset) -> pd.DataFrame:
     """All application findings (load + structure + relationships + snapshot)."""
     rows = (list(ds.findings) + _columns_and_keys(ds) + _foreign_keys(ds)
-            + _hierarchy(ds) + _snapshot(ds))
+            + _overlap_targets(ds) + _hierarchy(ds) + _snapshot(ds))
     frame = pd.DataFrame(rows, columns=FINDING_COLUMNS)
     if frame.empty:
         return frame

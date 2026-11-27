@@ -34,6 +34,11 @@ Private-mode components:
 | Summaries | `src/agriflight/operational/summaries.py` | Descriptive tables with no-inflation and no-allocation counting safeguards. |
 | Session cache | `src/agriflight/operational/session.py` | Per-session, in-memory only. Reloads when files change; cleared on return to synthetic mode. |
 | Views | `app/operational_views.py` | Rendering and labelling only. |
+| EDA | `src/agriflight/operational/eda.py` | Completeness, unit history, gaps between recorded capture dates, area evidence, overlap summary. |
+| Coverage feasibility | `src/agriflight/operational/coverage.py` | Target-source eligibility, exclusion reasons, training status, feature-availability review. |
+| EDA report | `src/agriflight/operational/eda_report.py` | Builds results for both the view and the script; validates the private output folder and writes outputs plus run metadata. |
+| Baseline | `src/agriflight/baselines/baseline.py` | Guarded historical-mean baseline (single grain, verified targets, chronological split). Not fitted to operational data. |
+| Script | `scripts/run_eda.py` | Reproducible private EDA run (see [eda_methodology.md](eda_methodology.md)). |
 
 ## Synthetic-mode components (v0.1.0, unchanged)
 
@@ -91,6 +96,6 @@ mutates it.
 | Further operational tables | Area evidence, planned schedules, trials and daily-work evidence are not yet shown (read-only integration exists for 18 tables). |
 | `agriflight.ledger` - completed-service event ledger | Needs the completion rule (multi-day captures), service episodes and onboarding dates. |
 | `agriflight.cadence` - cadence evaluation | 30-day target; operational +/-5 vs proposal +/-3 kept distinct; only once the anchor and eligible periods are confirmed. |
-| `agriflight.models` - coverage prediction | Baseline first, then ML (proposal 3.2), chronological splits. |
+| Coverage prediction models | Historical-mean baseline implemented (not fitted); ML (proposal 3.2) blocked until verified daily-hectare targets exist. |
 | `agriflight.scheduling` / routing | OR-Tools based scheduling and routing (proposal 3.3). |
 | API layer | Thin Python API over these services (proposal 3.5). |

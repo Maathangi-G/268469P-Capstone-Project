@@ -89,6 +89,30 @@ Actual test outcomes (Windows 11, Python 3.14.7, pandas 3.1.1, Streamlit 1.67.0)
 Manual browser verification: reported as completed by the student on 25 November 2026 (not observed by
 the AI assistant). Student review of the design decisions and approval to commit are still pending.
 
+## Milestone 3 - EDA, coverage-target feasibility and guarded baseline (25 November 2026; commit approved by the student 27 November 2026)
+
+Methods are described in [eda_methodology.md](eda_methodology.md). Real-data results are private and are not
+reproduced here.
+
+| Kind | Status |
+| --- | --- |
+| Implemented | EDA (completeness, recorded-date history, gaps between recorded capture dates, area evidence, overlap summary); coverage-target feasibility report; feature-availability review; historical-mean baseline; `scripts/run_eda.py`; app tab *EDA & coverage readiness*. |
+| Executed on real records | The EDA and feasibility report, via the script (outputs in the private sibling folder) and a headless app run. |
+| Tested only with fictional fixtures | All EDA edge cases, eligibility rules and baseline behaviour, including MAE/RMSE arithmetic. |
+| Blocked | Coverage-model training: no verified daily-hectare targets in the inspected integrated package. |
+| Baseline on real data | Implemented and tested with fictional fixtures; not fitted or evaluated on operational targets. No real predictive-performance results are available. |
+| Feature-availability review | AI-proposed and provisional; not validated. |
+
+Actual automated results (Windows 11, Python 3.14.7): tests before the milestone **94 passed**; after it,
+**131 passed**. Two defects were found and fixed during development: a dtype error in the finiteness check,
+and a test that mixed exclusion reasons across sources. A packaging issue was also caught: the repository's
+`models/` ignore rule would have hidden the new package, so it was renamed to `baselines/`. Headless app run
+on real data: the new tab and all layer selections rendered without exception. Server startup: health `ok`.
+Browser verification of the new tab has not been performed by the student or recorded.
+
+The Data Science component is **not** complete. Coverage prediction, its evaluation and the scheduling
+comparison remain outstanding.
+
 ## Next implementation milestone (planned)
 
 1. Local-only adapter from the private staging tables to a reviewed schema,
