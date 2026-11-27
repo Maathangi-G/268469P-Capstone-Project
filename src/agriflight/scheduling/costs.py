@@ -82,8 +82,10 @@ def is_covered(status: str) -> bool:
 def cost_summary(rows: list[dict]) -> dict[str, object]:
     known = [r["amount_lkr"] for r in rows if r["amount_lkr"] is not None]
     gaps = sorted({f"{r['category']} ({r['status']})" for r in rows if not is_covered(r["status"])})
+    # No routes -> no costed activity: a known 0, not an unknown amount.
+    total = round(sum(known), 2) if known else (0.0 if not rows else None)
     return {
-        "estimated_known_total_lkr": round(sum(known), 2) if known else None,
+        "estimated_known_total_lkr": total,
         "coverage_complete": not gaps,
         "missing_components": gaps,
         "bundle_day_routes_costed": len({(r["bundle_id"], r["day"]) for r in rows}),

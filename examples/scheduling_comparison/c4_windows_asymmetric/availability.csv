@@ -1,0 +1,7 @@
+resource_type,resource_id,date,available,provenance
+pilot,PIL_1,2030-06-03,True,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+pilot,PIL_1,2030-06-04,True,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+vehicle,VEH_CAR,2030-06-03,True,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+vehicle,VEH_CAR,2030-06-04,True,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+equipment,DRN_1,2030-06-03,True,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+equipment,DRN_1,2030-06-04,True,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)

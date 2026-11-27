@@ -1,0 +1,37 @@
+{
+  "scenario_id": "C4_WINDOWS_ASYMMETRIC",
+  "data_origin": "synthetic_demo",
+  "timezone": "Asia/Colombo",
+  "horizon_start": "2030-06-03",
+  "horizon_end": "2030-06-04",
+  "capacity_mode": "declared_assumption",
+  "working_day": {
+    "start": "08:00",
+    "end": "16:00",
+    "break_minutes": 30,
+    "break_after_minutes": 240
+  },
+  "cadence": {
+    "target_interval_days": 30,
+    "operational_tolerance_days": 5,
+    "proposal_tolerance_days": 3
+  },
+  "constraints_included": [
+    "same rule set as examples/scheduling_demo"
+  ],
+  "constraints_excluded": [
+    "overnight stays",
+    "job splitting",
+    "weather"
+  ],
+  "cost_categories_included": [
+    "trip",
+    "vehicle_day",
+    "distance_km",
+    "fuel_km",
+    "personnel_person_day",
+    "allowance_person_day"
+  ],
+  "provenance": "fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)",
+  "notes": "FICTIONAL comparison scenario: access window, booking date, asymmetric travel"
+}

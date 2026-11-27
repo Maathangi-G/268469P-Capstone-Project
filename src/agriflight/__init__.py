@@ -7,4 +7,4 @@ private operational dataset package located at run time
 no company data.
 """
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"

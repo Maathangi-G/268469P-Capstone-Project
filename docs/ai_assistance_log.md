@@ -328,3 +328,88 @@ trailer. Published history is not rewritten to remove it.
 - Version 1: daily return to depot, whole-day resource reservation, no handovers, no overnight stays,
   no job splitting.
 - Commit message written without a Claude co-author trailer, per the student's instruction.
+- Committed as `4582e3a` (34 files, scoped `--only` commit; recorded message verified to contain no
+  co-author trailer) and pushed to `origin/main`.
+
+---
+
+## 2026-11-27 - Session 7: milestone 5, CP-SAT optimizer and baseline comparison
+
+### Student input
+- Specified the milestone: an OR-Tools CP-SAT optimizer under the same operating rules as the rule
+  baseline; a lexicographic objective (jobs, then absolute preferred-window days, then travel); honest
+  solver-status handling; fictional comparison scenarios defined before evaluation; a comparison view
+  and script; tests and documentation. No staging, commit or push.
+
+### AI work (uncommitted, awaiting student review)
+- Inspected the repository (tests before changes: 181 passed).
+- Environment: checked compatibility first (Streamlit accepts protobuf `>=5.26.1,<8`) and saved a
+  pip-freeze snapshot. Then installed `ortools==9.15.6755` into the project virtual environment, which
+  added absl-py and immutabledict and downgraded protobuf from 7.36.2 to 6.33.6. `pip check` is clean.
+  Read the CP-SAT documentation (statuses, `add_circuit`, `num_workers` / `random_seed`).
+- Wrote `scheduling/optimizer.py` and `scheduling/comparison.py`, a `summarize_result` refactor in
+  `outputs.py`, a known-zero cost for empty schedules in `costs.py`, `scripts/compare_schedulers.py`,
+  a comparison section in `app/scheduling_view.py`, six fictional scenarios with their generator and a
+  pre-evaluation README, two test files, and documentation.
+- Results: every optimizer stage was OPTIMAL in all seven scenarios, and every itinerary passed the
+  checker. One recorded scenario expectation (c3) did not match the observed result; it is reported,
+  and the scenario was left unchanged.
+- Corrections during development: two test doubles that used an unsolved CP-SAT solver object.
+
+### AI decisions (pending student review)
+| # | Decision | Alternatives considered |
+| --- | --- | --- |
+| D32 | Exact CP-SAT model: one circuit per available team-day, with no candidate-route generation. | Enumerating candidate routes (risks a restricted optimum). |
+| D33 | Integer seconds with durations rounded up; results rebuilt with the baseline's exact minute timeline and checked. | Integer minutes (coarser); floating-point timing (unsupported by CP-SAT). |
+| D34 | Three sequential solves, each fixing the previous objective (or bounding it, when that stage is only feasible). | A weighted single objective with large constants. |
+| D35 | The total time budget is split evenly across the remaining stages; seed 42 and 1 worker by default. | Separate per-stage budgets. |
+| D36 | Unscheduled jobs get either structural reasons or NOT_SELECTED_BY_OPTIMIZER, stating whether a solo route fits. | Reusing the baseline's greedy reason codes (inaccurate for an optimizer). |
+| D37 | Fallback off by default; when enabled it is explicitly labelled `rule_baseline_fallback`. | Silent fallback. |
+| D38 | Optional dependency extra `optimizer = ["ortools>=9.15,<9.16"]`; optimizer tests skip when OR-Tools is absent. | A hard dependency for every user. |
+| D39 | An empty schedule has a known cost of 0, not an unknown cost. | Leaving it unknown. |
+
+### AI verification (performed by the assistant, not the student)
+- Test suite after changes: 207 passed. With OR-Tools simulated as absent: 181 passed, 2 modules skipped.
+- Headless app check of the comparison section: it solves only when the button is pressed, and stale
+  results are hidden after the scenario or settings change.
+
+### Focused review requested by the student (2026-11-27)
+- The student asked about time rounding and comparison validity, the shared solver budget and incumbent
+  handling, result wording (including the c3 cost wording), the environment, and the file count. No new
+  features.
+- Findings (assistant):
+  - The integer-second conversion changes 0 of 280 audited durations across the seven scenarios.
+  - With its assignments and visit orders fixed as hard constraints (not hints), the baseline's solution
+    is feasible in the optimizer's integer model in all seven scenarios. The optimizer's objective is
+    lexicographically no worse in each.
+  - `--time-limit` is one shared budget per scenario, split across the remaining stages.
+  - A later-stage UNKNOWN keeps the previous incumbent (existing test).
+  - Validated empty schedule, no solution and labelled fallback are distinct (existing tests).
+- Changes (assistant):
+  - Added `scheduling/equivalence.py` (rounding audit and baseline-in-model check) and
+    `tests/test_scheduling_equivalence.py`, including a fractional-duration boundary regression showing
+    that rounding is conservative and can accumulate.
+  - The comparison script now reports the audit, the check and the solver times.
+  - Documentation corrected: rounding accumulates; the "no worse" claim is now conditional on
+    baseline feasibility and consistent measures; the c3 cost wording (+71%, not double); same-set and
+    different-set results in separate tables; no success-rate interpretation; the reproducible install
+    constraint.
+- Correction: the assistant earlier reported "12 modified, 67 new" files. The actual working tree had
+  11 modified and 68 new before this review.
+- Test suite after these changes: 216 passed, 0 failed, 0 skipped. `pip check` clean; no dependency
+  changes in this review.
+
+### Student actions
+- The student reported completing a **manual browser check** of private mode and the optimizer comparison
+  section (stated by the student; not observed by the assistant). The date was not specified in the
+  approval message.
+- 2026-11-27: the student **approved committing and pushing** this milestone, limited to the 81 listed
+  files (11 modified, 70 new) (stated by the student).
+- Not stated by the student: review of the optimizer code, or approval of decisions D32-D39 as a whole.
+
+### Limitations at commit (as recorded by the assistant)
+- Fictional scenarios only; not validated on company operations; no company-level improvement claimed.
+- Integer-second rounding is conservative and can exclude schedules that fit exactly at a time limit
+  (none of the current scenarios is affected).
+- Version 1 rules: no overnight stays, multi-day jobs, handovers or job splitting.
+- Commit message written without a Claude co-author trailer, per the student's instruction.

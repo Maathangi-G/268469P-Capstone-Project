@@ -1,0 +1,6 @@
+location_id,location_kind,access_point_verified,provenance
+DEP_1,depot,False,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+DEP_2,depot,False,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+SITE_X,job_site,False,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+SITE_Y,job_site,False,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+SITE_Z,job_site,False,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)

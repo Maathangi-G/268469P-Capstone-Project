@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pandas as pd
 import streamlit as st
 
 from agriflight.scheduling import DRAFT_NOTICE, ScenarioError, load_scenario, run_scenario
@@ -64,3 +65,69 @@ def render() -> None:
     with st.expander("Assumptions and scenario provenance"):
         _table(f["assumptions"])
     st.code("python scripts/run_schedule.py", language="powershell")
+    _comparison()
+
+
+SCENARIOS = {"scheduling_demo (11 jobs)": DEMO_DIR} | {
+    p.name: p for p in sorted((DEMO_DIR.parent / "scheduling_comparison").glob("c*")) if p.is_dir()}
+CMP_KEY = "_scheduler_comparison"
+
+
+def _comparison() -> None:
+    from agriflight.scheduling.comparison import OBJECTIVE_PRIORITIES, assess, compare_folder, scenario_hash
+    from agriflight.scheduling.optimizer import OptimizerConfig, solver_version
+
+    st.divider()
+    st.subheader("Baseline vs CP-SAT optimizer (fictional scenarios)")
+    st.caption("Both methods use the same rules, inputs, cost module and independent checker. The optimizer may "
+               "choose different eligible teams, days and visit orders. Objective (lexicographic): "
+               + " | ".join(OBJECTIVE_PRIORITIES))
+    if "not installed" in solver_version():
+        st.warning("OR-Tools is not installed in this environment; the comparison is unavailable. "
+                   "Install with: python -m pip install \"ortools>=9.15,<9.16\"")
+        return
+    c1, c2 = st.columns([2, 1])
+    name = c1.selectbox("Fictional scenario", list(SCENARIOS), key="cmp_scenario")
+    limit = c2.number_input("Solver time budget (s)", min_value=1.0, max_value=120.0, value=20.0, step=1.0,
+                            key="cmp_limit")
+    folder = SCENARIOS[name]
+    cfg = OptimizerConfig(time_limit_s=float(limit), random_seed=42, num_workers=1)
+    key = (str(folder), scenario_hash(folder), cfg)
+    if st.button("Run optimizer comparison", key="cmp_run"):
+        st.session_state[CMP_KEY] = (key, compare_folder(folder, cfg))
+    stored = st.session_state.get(CMP_KEY)
+    if not stored or stored[0] != key:
+        st.info("Press **Run optimizer comparison** to solve this scenario (results are not computed automatically "
+                "and are discarded when the scenario or settings change).")
+        return
+    comp = stored[1]
+    st.warning("Fictional scenario; draft plans only - not dispatch authorisation, not company-level evidence.",
+               icon="⚠️")
+    st.markdown(f"**Verdict on the stated objective:** {assess(comp)} | optimizer status "
+                f"`{comp.optimizer.status_label}` | {comp.optimizer.solver_version} | runtime "
+                f"{comp.optimizer.runtime_s} s | seed {cfg.random_seed}, workers {cfg.num_workers}")
+    for note in comp.notes:
+        st.warning(note)
+    if comp.optimizer.message:
+        st.caption(comp.optimizer.message)
+    _table(comp.table, height=420)
+    st.markdown("**Solver stages** (later stages fix earlier objectives; not proven optimal unless every stage is OPTIMAL)")
+    _table(pd.DataFrame(comp.optimizer.stages))
+    left, right = st.columns(2)
+    with left:
+        st.markdown("**Baseline itinerary**")
+        _table(comp.baseline.frames["itinerary"], height=260)
+        st.markdown("**Baseline: not scheduled**")
+        _table(comp.baseline.frames["unassigned"])
+    with right:
+        st.markdown("**Optimizer itinerary**")
+        if comp.optimizer_run is None:
+            st.error("No valid optimizer schedule (see status above).")
+        else:
+            _table(comp.optimizer_run.frames["itinerary"], height=260)
+            st.markdown("**Optimizer: not scheduled** (omission is not proof of individual infeasibility)")
+            _table(comp.optimizer_run.frames["unassigned"])
+    if not comp.baseline.cost_summary["coverage_complete"] or (
+            comp.optimizer_run is not None and not comp.optimizer_run.cost_summary["coverage_complete"]):
+        st.caption("Known estimated costs are incomplete (missing rates stay unknown); they are not budgets or savings.")
+    st.code("python scripts/compare_schedulers.py", language="powershell")

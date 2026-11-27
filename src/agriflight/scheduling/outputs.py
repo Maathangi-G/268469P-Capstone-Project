@@ -38,11 +38,15 @@ def due_date_window_deviation(offset_days: int, tolerance_days: int) -> int:
     return max(0, abs(offset_days) - tolerance_days)
 
 
-def run_scenario(scenario: Scenario) -> ScheduleRun:
-    result = build_schedule(scenario)
-    costs = [row for r in result.routes for row in route_costs(scenario, r)]
+def summarize_result(result: ScheduleResult) -> ScheduleRun:
+    """Costs, independent checks and tables for ANY schedule result (baseline or optimizer)."""
+    costs = [row for r in result.routes for row in route_costs(result.scenario, r)]
     checks = check_schedule(result, costs)
     return ScheduleRun(result, _frames(result, costs, checks), cost_summary(costs), bool(checks["passed"].all()))
+
+
+def run_scenario(scenario: Scenario) -> ScheduleRun:
+    return summarize_result(build_schedule(scenario))
 
 
 def run_folder(folder) -> ScheduleRun:

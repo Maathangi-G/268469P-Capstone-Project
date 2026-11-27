@@ -41,6 +41,10 @@ AgriFlight AI capstone (G. Maathangi, 268469P). Public GitHub repository.
   `last_recorded_capture_date`. Do not change `scheduler_ready` flags in the dataset.
 - Real scenarios and their outputs stay outside Git and outside the dataset package.
 - Results are drafts, not dispatch authorisation; no optimisation superiority is claimed.
+- Optimizer (milestone 5): same rules as the baseline; never change the baseline's decisions to flatter
+  the comparison; report solver status per stage honestly (UNKNOWN is not infeasible; FEASIBLE is not
+  optimal); validate every optimizer itinerary with the shared checker; label any fallback as such.
+  Comparison scenarios are defined before evaluation and never edited to manufacture a win.
 
 ## Work in reviewed increments (future workflow)
 - No automatic staging, committing or pushing. Finish, test and report; then wait for the

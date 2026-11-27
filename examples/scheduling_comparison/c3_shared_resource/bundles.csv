@@ -1,0 +1,3 @@
+bundle_id,depot_location_id,pilot_ids,vehicle_id,equipment_ids,work_rate_ha_per_hour,setup_min,input_status,provenance
+TEAM_1,DEP_1,PIL_1,VEH_CAR,DRN_1,30,0,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+TEAM_2,DEP_2,PIL_2,VEH_4WD,DRN_1,30,0,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)

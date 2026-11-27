@@ -6,7 +6,7 @@ Nothing here is a measured result.
 
 from __future__ import annotations
 
-MILESTONE = "Milestone 4 - rule-based scheduling baseline on fictional scenarios (v0.4.0, awaiting student review)"
+MILESTONE = "Milestone 5 - CP-SAT optimizer and baseline comparison on fictional scenarios (v0.5.0, awaiting student review)"
 
 CADENCE_POLICY = {
     "target_interval_days": 30,
@@ -35,6 +35,8 @@ IMPLEMENTED = [
     "Historical-mean baseline: implemented and tested; not fitted or evaluated on operational targets.",
     "Rule-based scheduling baseline: draft itineraries, estimated costs and an independent checker "
     "(fictional scenarios only; not optimisation, not dispatch authorisation).",
+    "OR-Tools CP-SAT optimizer under the same rules (lexicographic: jobs, preferred-window days, travel) "
+    "and a reproducible baseline comparison on seven fictional scenarios.",
 ]
 
 PENDING = [
@@ -43,8 +45,8 @@ PENDING = [
     "Cadence-window evaluation on approved service records.",
     "Fitting/evaluating the baseline and ML models (proposal section 3.2) on verified targets.",
     "Approved real planning scenario (due dates, resources, availability, depots, travel matrix, rates).",
-    "OR-Tools scheduling/routing and its comparison with the rule-based baseline (proposal section 3.3).",
-    "Overnight stays and multi-day jobs (not supported by the baseline version 1).",
+    "Comparison on an approved real scenario (optimizer and baseline currently tested on fictional inputs only).",
+    "Overnight stays and multi-day jobs (supported by neither the baseline nor the optimizer yet).",
     "Weather-informed replanning, scenario and cost analysis (proposal sections 3.4-3.6).",
 ]
 
@@ -63,6 +65,7 @@ NOT_CLAIMED = [
     "No completed services, due dates, overdue, late or cancellation labels have been derived.",
     "No scheduling improvement, optimisation superiority, travel saving or cost saving is claimed.",
     "Scheduling outputs are drafts on fictional inputs; no company division is made scheduler-ready.",
+    "Optimizer-vs-baseline differences on fictional scenarios are not company-level improvements.",
     "Source observations are not treated as completed flights or reconciled services.",
     "Budget rows are historical estimates, not actual spend or a forecast budget.",
 ]

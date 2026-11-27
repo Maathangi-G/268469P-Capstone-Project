@@ -1,0 +1,3 @@
+equipment_id,equipment_type,input_status,provenance
+DRN_1,ms_drone,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+DRN_2,ms_drone,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)

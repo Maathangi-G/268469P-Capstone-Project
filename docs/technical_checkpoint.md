@@ -131,6 +131,27 @@ corrected; the code's value was right. Fictional demo: 7 of 11 jobs scheduled, 4
 structured reasons, all independent checks passed. Cost coverage is incomplete by design: one rate is
 unknown. Browser verification of the new tab has not been performed or recorded.
 
+## Milestone 5 - CP-SAT optimizer and baseline comparison (27 November 2026, awaiting student review)
+
+Details: [scheduling_optimizer.md](scheduling_optimizer.md).
+
+| Kind | Status |
+| --- | --- |
+| Implemented | CP-SAT model (circuit routes per team-day, timing and break semantics shared with the baseline, whole-day resource exclusivity); three-stage lexicographic objective; exact rebuild plus independent check of every itinerary; comparison module and script; comparison section in the scheduling tab; six new fictional scenarios. |
+| Executed on real records | Nothing. |
+| Tested with fictional scenarios | Optimizer correctness (including a hand-solved case), statuses and fallback, and comparison metrics. |
+| Environment change | Added `ortools 9.15.6755`, `absl-py 2.5.1` and `immutabledict 4.3.1`. protobuf went from 7.36.2 to 6.33.6, as OR-Tools requires; `pip check` is clean. |
+
+Actual automated results (Windows 11, Python 3.14.7): tests before the milestone **181 passed**; after it,
+**207 passed**, then **216 passed, 0 failed, 0 skipped** after the focused review added rounding and
+equivalence checks. With OR-Tools simulated as absent (before the review): 181 passed and 2 optimizer
+test modules were skipped. Rounding audit: 0 of 280 durations changed in the seven scenarios. The
+baseline's solution is feasible in the optimizer's integer model in all seven.
+Every optimizer stage was OPTIMAL in all seven fictional scenarios. All itineraries passed the checker.
+Two test doubles were corrected during development; production code was unaffected. Manual browser check
+of private mode and the comparison section: reported as completed by the student (date not specified; not
+observed by the AI assistant). Commit approved by the student on 27 November 2026.
+
 ## Next implementation milestone (planned)
 
 1. Local-only adapter from the private staging tables to a reviewed schema,

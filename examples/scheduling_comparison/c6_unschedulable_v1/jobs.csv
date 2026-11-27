@@ -1,0 +1,6 @@
+job_id,division_id,location_id,required_area_ha,service_duration_min,setup_min,planning_due_date,preferred_window_start,preferred_window_end,hard_earliest_date,hard_latest_date,blocked_dates,access_start,access_end,required_vehicle_type,required_equipment_type,required_skills,input_status,provenance
+OK,DIV_OK,SITE_OK,,60,0,2030-06-03,2030-06-03,2030-06-04,,,,,,,ms_drone,ms,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+BIG,DIV_BIG,SITE_BIG,600,,0,2030-06-03,2030-06-03,2030-06-04,,,,,,,ms_drone,ms,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+FAR,DIV_FAR,SITE_FAR,,60,0,2030-06-03,2030-06-03,2030-06-04,,,,,,,ms_drone,ms,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+THERMAL,DIV_THERMAL,SITE_OK,,30,0,2030-06-03,2030-06-03,2030-06-04,,,,,,,thermal_camera,thermal,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+ISLAND,DIV_ISLAND,SITE_ISLAND,,30,0,2030-06-03,2030-06-03,2030-06-04,,,,,,,ms_drone,ms,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)

@@ -1,0 +1,3 @@
+pilot_id,skills,input_status,provenance
+PIL_1,ms,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+PIL_2,ms,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)

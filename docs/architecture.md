@@ -51,6 +51,10 @@ Scheduling baseline components (see [scheduling_baseline.md](scheduling_baseline
 | Outputs | `src/agriflight/scheduling/outputs.py` | Tables shared by the app view and the script. |
 | View / script | `app/scheduling_view.py`, `scripts/run_schedule.py` | Synthetic-mode tab; command-line runs (private scenarios kept outside Git). |
 | Demo scenario | `examples/scheduling_demo/` | Entirely fictional inputs plus their generator. |
+| CP-SAT optimizer | `src/agriflight/scheduling/optimizer.py` | Same rules; circuit-based routes per team-day; lexicographic objective by sequential solves; results rebuilt and checked like the baseline. See [scheduling_optimizer.md](scheduling_optimizer.md). |
+| Comparison | `src/agriflight/scheduling/comparison.py`, `scripts/compare_schedulers.py` | Same metrics, cost module and checker for both methods; input hashes and solver configuration recorded. |
+| Comparison scenarios | `examples/scheduling_comparison/` | Six fictional scenarios defined before evaluation, plus their generator. |
+| Equivalence checks | `src/agriflight/scheduling/equivalence.py` | Integer-second rounding audit; baseline solution fixed as hard constraints in the optimizer model; baseline evaluated on the optimizer's objective measures. |
 
 ## Synthetic-mode components (v0.1.0, unchanged)
 
@@ -109,5 +113,5 @@ mutates it.
 | `agriflight.ledger` - completed-service event ledger | Needs the completion rule (multi-day captures), service episodes and onboarding dates. |
 | `agriflight.cadence` - cadence evaluation | 30-day target; operational +/-5 vs proposal +/-3 kept distinct; only once the anchor and eligible periods are confirmed. |
 | Coverage prediction models | Historical-mean baseline implemented (not fitted); ML (proposal 3.2) blocked until verified daily-hectare targets exist. |
-| OR-Tools scheduling and routing | Planned (proposal 3.3); to be compared with the rule-based baseline on identical scenarios using the shared cost and checker modules. |
+| Overnight / multi-day scheduling | Planned; neither the baseline nor the CP-SAT model supports overnight stays or job splitting yet. |
 | API layer | Thin Python API over these services (proposal 3.5). |

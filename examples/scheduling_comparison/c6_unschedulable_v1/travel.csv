@@ -1,0 +1,9 @@
+from_location_id,to_location_id,travel_minutes,distance_km,source,provenance
+DEP_1,SITE_OK,20,15,fictional,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+SITE_OK,DEP_1,20,15,fictional,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+DEP_1,SITE_BIG,20,15,fictional,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+SITE_BIG,DEP_1,20,15,fictional,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+DEP_1,SITE_FAR,240,200,fictional,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+SITE_FAR,DEP_1,240,200,fictional,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+SITE_OK,SITE_FAR,230,190,fictional,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+SITE_FAR,SITE_OK,230,190,fictional,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)

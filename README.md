@@ -3,7 +3,7 @@
 Capstone project (Master's in Data Science and AI, G. Maathangi, 268469P):
 **Agri-Flight AI - decision support for agricultural drone-operation planning.**
 
-> **Current scope: v0.4.0 (milestone 4 - rule-based scheduling baseline - awaiting review).** A local Streamlit
+> **Current scope: v0.5.0 (milestone 5 - CP-SAT optimizer and baseline comparison - awaiting review).** A local Streamlit
 > dashboard with two explicit data modes:
 > - **Synthetic demonstration** (default): the public demo schema, loader,
 >   validator and summaries.
@@ -105,6 +105,19 @@ synthetic mode under **Scheduling baseline**. The outputs are draft planning
 results with estimated costs: not dispatch authorisation, not optimisation, and
 not operationally validated. See [docs/scheduling_baseline.md](docs/scheduling_baseline.md).
 
+## CP-SAT optimizer comparison (fictional scenarios)
+
+```powershell
+python -m pip install -e ".[app,dev,optimizer]"   # adds ortools (tested 9.15.6755)
+python scripts/compare_schedulers.py
+```
+
+This compares the rule-based baseline with an OR-Tools CP-SAT model that
+follows the same rules. Both use the same cost module and the same independent
+checker. In the app: synthetic mode → **Scheduling baseline** → **Run optimizer
+comparison**. The results are fictional and demonstrate model behaviour only.
+See [docs/scheduling_optimizer.md](docs/scheduling_optimizer.md).
+
 ## Run the tests
 
 ```bash
@@ -138,7 +151,7 @@ python -m pytest
 | Historical-mean baseline | Implemented and tested; not fitted or evaluated on operational targets |
 | Coverage prediction models (ML) | Blocked: no verified daily-hectare targets in the inspected package |
 | Rule-based scheduling baseline (draft itineraries, estimated costs, independent checker) | Implemented; tested on fictional scenarios only; awaiting student review |
-| OR-Tools optimisation and comparison | Planned |
+| OR-Tools CP-SAT optimizer and baseline comparison | Implemented; fictional scenarios only; awaiting student review |
 | Completed-service event ledger, cadence (30 +/- 5 days) evaluation | Planned - business rules unconfirmed |
 | Coverage prediction (baseline + ML), scheduling, routing, cost & scenario analysis | Planned (see proposal) |
 
@@ -157,6 +170,8 @@ scripts/run_eda.py                 Reproducible private EDA run
 src/agriflight/scheduling/         Rule-based scheduling baseline, costs, checker
 examples/scheduling_demo/          Fictional scheduling scenario (+ generator)
 scripts/run_schedule.py            Scheduling baseline run
+scripts/compare_schedulers.py      Baseline vs CP-SAT optimizer comparison
+examples/scheduling_comparison/    Fictional comparison scenarios (+ generator)
 data/sample/                       Synthetic demonstration data only
 tests/                             pytest suite (incl. headless app smoke test)
 docs/                              Architecture, data contract, checkpoint notes

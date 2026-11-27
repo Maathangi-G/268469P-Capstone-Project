@@ -1,0 +1,9 @@
+rate_id,category,applies_to,amount_lkr,includes_fuel,input_status,provenance
+R_TRIP,trip,*,500,,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+R_VD_CAR,vehicle_day,car,9000,False,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+R_VD_4WD,vehicle_day,4wd,18000,False,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+R_KM_CAR,distance_km,car,60,True,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+R_KM_4WD,distance_km,4wd,40,False,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+R_FUEL_4WD,fuel_km,4wd,55,,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+R_PERSON,personnel_person_day,*,7500,,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+R_ALLOW,allowance_person_day,*,,,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)

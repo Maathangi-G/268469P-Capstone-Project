@@ -1,0 +1,2 @@
+vehicle_id,vehicle_type,input_status,provenance
+VEH_CAR,car,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)

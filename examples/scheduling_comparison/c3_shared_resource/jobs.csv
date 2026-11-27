@@ -1,0 +1,4 @@
+job_id,division_id,location_id,required_area_ha,service_duration_min,setup_min,planning_due_date,preferred_window_start,preferred_window_end,hard_earliest_date,hard_latest_date,blocked_dates,access_start,access_end,required_vehicle_type,required_equipment_type,required_skills,input_status,provenance
+X,DIV_X,SITE_X,,60,0,2030-06-02,2030-06-03,2030-06-04,,,,,,,ms_drone,ms,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+Y,DIV_Y,SITE_Y,,90,0,2030-06-03,2030-06-03,2030-06-04,,,,,,4wd,ms_drone,ms,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
+Z,DIV_Z,SITE_Z,,90,0,2030-06-03,2030-06-03,2030-06-04,,,,,,4wd,ms_drone,ms,assumption,fictional comparison scenario (examples/scheduling_comparison/build_scenarios.py)
